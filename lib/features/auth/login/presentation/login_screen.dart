@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/forget_password/presentation/forget_password_screen.dart';
+import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
+import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -306,7 +308,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 const SizedBox(height: 4),
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    NavigationService.navigateTo(
+                                      Routes.registerScreen,
+                                    );
+                                  },
                                   child: Text(
                                     'Create an Account',
                                     style: TextStyle(

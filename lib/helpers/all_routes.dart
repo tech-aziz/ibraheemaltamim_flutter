@@ -1,27 +1,20 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/login/presentation/login_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/otp/presentation/register_otp_verification_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/register/presentation/register_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
   Routes._internal();
   static Routes get instance => _routes;
-  static const String onboardingScreen = '/onboarding_screen';
+
+  static const String registerScreen = '/onboardingScreen';
   static const String loginScreen = '/loginScreen';
-  static const String signupScreen = '/signupScreen';
-  static const String enterpriceLoginScreen = '/enterpriceLoginScreen';
-  static const String selectAreaScreen = '/selectAreaScreen';
-  static const String profileSetupScreen = '/profileSetupScreen';
-  static const String signupOtpVerificationScreen =
-      '/signupOtpVerificationScreen';
-  static const String loginVerificationScreen = '/loginVerificationScreen';
+  static const String registerOtpVerificationScreen =
+      '/registerOtpVerificationScreen';
   static const String homeScreen = '/homeScreen';
-  static const String farmersScreen = '/farmersScreen';
-  static const String pondsScreen = '/pondsScreen';
-  static const String bottomNavBar = '/bottomNavBar';
-  static const String mainObservationScreen = '/mainObservationScreen';
-  static const String knowledgeBaseScreen = '/knowledgeBaseScreen';
-  static const String supportScreen = '/supportScreen';
-  static const String productInputsScreen = '/productInputsScreen';
 }
 
 final class RouteGenerator {
@@ -32,13 +25,42 @@ final class RouteGenerator {
 
   static Route<dynamic>? generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case Routes.productInputsScreen:
+      // ---------- Register Screen ----------
+      case Routes.registerScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: RegisterScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => RegisterScreen());
 
-        // return Platform.isAndroid
-        //     ? _FadedTransitionRoute(
-        //         widget: const ProductInputsScreen(), settings: settings)
-        //     : CupertinoPageRoute(
-        //         builder: (context) => const ProductInputsScreen());
+      // ---------- Login Screen ----------
+      case Routes.loginScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(widget: LoginScreen(), settings: settings)
+            : CupertinoPageRoute(builder: (context) => LoginScreen());
+
+      case Routes.registerOtpVerificationScreen:
+        final args = settings.arguments as Map;
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: RegisterOtpVerificationScreen(email: args['email']),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) =>
+                    RegisterOtpVerificationScreen(email: args['email']),
+              );
+
+      case Routes.homeScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(widget: HomeScreen(), settings: settings)
+            : CupertinoPageRoute(builder: (context) => HomeScreen());
+      // return Platform.isAndroid
+      //     ? _FadedTransitionRoute(
+      //         widget: const ProductInputsScreen(), settings: settings)
+      //     : CupertinoPageRoute(
+      //         builder: (context) => const ProductInputsScreen());
 
       // case Routes.onboardingScreen:
       //   return Platform.isAndroid
@@ -50,11 +72,6 @@ final class RouteGenerator {
       //   return Platform.isAndroid
       //       ? _FadedTransitionRoute(widget: LoginScreen(), settings: settings)
       //       : CupertinoPageRoute(builder: (context) => LoginScreen());
-
-      // case Routes.signupScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(widget: SignupScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => SignupScreen());
 
       // case Routes.signupOtpVerificationScreen:
       //   return Platform.isAndroid
@@ -142,27 +159,31 @@ class _FadedTransitionRoute extends PageRouteBuilder {
   final RouteSettings settings;
 
   _FadedTransitionRoute({required this.widget, required this.settings})
-      : super(
-          settings: settings,
-          reverseTransitionDuration: const Duration(milliseconds: 1),
-          pageBuilder: (BuildContext context, Animation<double> animation,
-              Animation<double> secondaryAnimation) {
-            return widget;
-          },
-          transitionDuration: const Duration(milliseconds: 1),
-          transitionsBuilder: (BuildContext context,
+    : super(
+        settings: settings,
+        reverseTransitionDuration: const Duration(milliseconds: 1),
+        pageBuilder:
+            (
+              BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
-              Widget child) {
-            return FadeTransition(
-              opacity: CurvedAnimation(
-                parent: animation,
-                curve: Curves.ease,
-              ),
-              child: child,
-            );
-          },
-        );
+            ) {
+              return widget;
+            },
+        transitionDuration: const Duration(milliseconds: 1),
+        transitionsBuilder:
+            (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,
+            ) {
+              return FadeTransition(
+                opacity: CurvedAnimation(parent: animation, curve: Curves.ease),
+                child: child,
+              );
+            },
+      );
 }
 
 class ScreenTitle extends StatelessWidget {
@@ -177,10 +198,7 @@ class ScreenTitle extends StatelessWidget {
       duration: const Duration(milliseconds: 500),
       curve: Curves.bounceIn,
       builder: (context, value, child) {
-        return Opacity(
-          opacity: value,
-          child: child,
-        );
+        return Opacity(opacity: value, child: child);
       },
       child: widget,
     );
