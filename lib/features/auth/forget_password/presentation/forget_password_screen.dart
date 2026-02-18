@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
+import 'package:ibraheemaltamim_flutter/assets_helper/app_icons.dart';
+import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -43,7 +47,18 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       appBar: AppBar(
         backgroundColor: AppColor.bgColor,
         elevation: 0,
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
+        leading: IconButton(
+          onPressed: () {
+            NavigationService.goBack;
+          },
+          icon: SvgPicture.asset(
+            AppIcons.arrow_back,
+            // color: AppColor.c333334,
+            width: 15.w,
+            height: 15.h,
+            fit: BoxFit.contain,
+          ),
+        ),
         title: Text(
           'Forget Password',
           style: TextStyle(
