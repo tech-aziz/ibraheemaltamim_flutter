@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_icons.dart';
+import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
@@ -177,6 +178,9 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                 FocusScope.of(context).unfocus();
                                 if (_formKey.currentState!.validate()) {
                                   print("Form Valid ✅");
+                                  NavigationService.navigateTo(
+                                    Routes.setNewPasswordScreen,
+                                  );
                                 }
                               },
                               style: ElevatedButton.styleFrom(

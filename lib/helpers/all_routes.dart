@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/login/presentation/login_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/otp/presentation/register_otp_verification_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/register/presentation/register_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/set_new_password/presentation/set_new_password_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
 
 final class Routes {
@@ -15,6 +16,7 @@ final class Routes {
   static const String registerOtpVerificationScreen =
       '/registerOtpVerificationScreen';
   static const String homeScreen = '/homeScreen';
+  static const String setNewPasswordScreen = '/setNewPasswordScreen';
 }
 
 final class RouteGenerator {
@@ -40,6 +42,7 @@ final class RouteGenerator {
             ? _FadedTransitionRoute(widget: LoginScreen(), settings: settings)
             : CupertinoPageRoute(builder: (context) => LoginScreen());
 
+      // ---------- Register Otp Verification Screen ----------
       case Routes.registerOtpVerificationScreen:
         final args = settings.arguments as Map;
         return Platform.isAndroid
@@ -52,10 +55,20 @@ final class RouteGenerator {
                     RegisterOtpVerificationScreen(email: args['email']),
               );
 
+      // ---------- Home Screen ----------
       case Routes.homeScreen:
         return Platform.isAndroid
             ? _FadedTransitionRoute(widget: HomeScreen(), settings: settings)
             : CupertinoPageRoute(builder: (context) => HomeScreen());
+      // ---------- Set New Password Screen ----------
+      case Routes.setNewPasswordScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: SetNewPasswordScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => SetNewPasswordScreen());
+
       // return Platform.isAndroid
       //     ? _FadedTransitionRoute(
       //         widget: const ProductInputsScreen(), settings: settings)
