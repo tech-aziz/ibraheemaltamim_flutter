@@ -5,6 +5,7 @@ import 'package:ibraheemaltamim_flutter/features/auth/otp/presentation/register_
 import 'package:ibraheemaltamim_flutter/features/auth/register/presentation/register_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/set_new_password/presentation/set_new_password_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/navbar.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
@@ -17,6 +18,7 @@ final class Routes {
       '/registerOtpVerificationScreen';
   static const String homeScreen = '/homeScreen';
   static const String setNewPasswordScreen = '/setNewPasswordScreen';
+  static const String navbar = '/navbar';
 }
 
 final class RouteGenerator {
@@ -68,6 +70,12 @@ final class RouteGenerator {
                 settings: settings,
               )
             : CupertinoPageRoute(builder: (context) => SetNewPasswordScreen());
+
+      // ---------- Navbar ----------
+      case Routes.navbar:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(widget: Navbar(), settings: settings)
+            : CupertinoPageRoute(builder: (context) => Navbar());
 
       // return Platform.isAndroid
       //     ? _FadedTransitionRoute(
