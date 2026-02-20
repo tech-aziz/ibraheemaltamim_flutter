@@ -23,16 +23,36 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _launchWhatsApp() async {
-    const phoneNumber = "01789398972"; // Replace with actual number
-    final url = Uri.parse("whatsapp://send?phone=$phoneNumber");
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      // Fallback to web if app is not installed
-      final webUrl = Uri.parse("https://wa.me/$phoneNumber");
-      if (await canLaunchUrl(webUrl)) {
-        await launchUrl(webUrl);
+    const phoneNumber = "+8801789398972";
+    final whatsappUrl = Uri.parse("whatsapp://send?phone=$phoneNumber");
+    final webUrl = Uri.parse("https://wa.me/$phoneNumber");
+
+    try {
+      // Try WhatsApp app first
+      if (await canLaunchUrl(whatsappUrl)) {
+        await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
       }
+      // Fallback to Web URL (wa.me)
+      else if (await canLaunchUrl(webUrl)) {
+        await launchUrl(webUrl, mode: LaunchMode.externalApplication);
+      }
+      // If canLaunchUrl still returns false (common on some Android versions),
+      // try launching anyway as a last resort
+      else {
+        try {
+          await launchUrl(webUrl, mode: LaunchMode.externalApplication);
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Could not launch WhatsApp or Browser'),
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint("Error launching WhatsApp: $e");
     }
   }
 
