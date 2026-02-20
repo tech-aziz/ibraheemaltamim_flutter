@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
+import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
+import 'package:ibraheemaltamim_flutter/provider/opportunity_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:ibraheemaltamim_flutter/common_widgets/circular_icon_btn.dart';
 import 'package:ibraheemaltamim_flutter/features/home/widgets/build_waiting_list_card_widget.dart';
+import 'package:ibraheemaltamim_flutter/features/home/widgets/filter_dialog.dart';
 import 'package:ibraheemaltamim_flutter/features/home/widgets/opportunity_card_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
-  int _favoriteCount = 0;
 
   @override
   void dispose() {
@@ -22,39 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void _launchWhatsApp() async {
-    const phoneNumber = "+8801789398972";
-    final whatsappUrl = Uri.parse("whatsapp://send?phone=$phoneNumber");
-    final webUrl = Uri.parse("https://wa.me/$phoneNumber");
-
-    try {
-      // Try WhatsApp app first
-      if (await canLaunchUrl(whatsappUrl)) {
-        await launchUrl(whatsappUrl, mode: LaunchMode.externalApplication);
-      }
-      // Fallback to Web URL (wa.me)
-      else if (await canLaunchUrl(webUrl)) {
-        await launchUrl(webUrl, mode: LaunchMode.externalApplication);
-      }
-      // If canLaunchUrl still returns false (common on some Android versions),
-      // try launching anyway as a last resort
-      else {
-        try {
-          await launchUrl(webUrl, mode: LaunchMode.externalApplication);
-        } catch (e) {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Could not launch WhatsApp or Browser'),
-              ),
-            );
-          }
-        }
-      }
-    } catch (e) {
-      debugPrint("Error launching WhatsApp: $e");
-    }
-  }
 
   ImageProvider _getImageProvider(String imageUrl) {
     final String cleanUrl = imageUrl.trim();
@@ -110,14 +82,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        OpportunityCard(
-                          onFavoriteCountChanged: (count) {
-                            setState(() {
-                              _favoriteCount = count;
-                            });
+                        Consumer<OpportunityProvider>(
+                          builder: (context, opportunityProvider, child) {
+                            return OpportunityCard(
+                              opportunities: opportunityProvider.opportunities
+                                  .take(2)
+                                  .toList(),
+                            );
                           },
                         ),
-                        SizedBox(height: 100.h), // Space for navbar
                       ],
                     ),
                   ),
@@ -128,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
               right: 20.w,
               bottom: 110.h,
               child: GestureDetector(
-                onTap: _launchWhatsApp,
+                onTap: () => launchWhatsApp(context: context),
                 child: Container(
                   width: 60.w,
                   height: 60.w,
@@ -183,70 +156,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         const Spacer(),
-        _buildCircularIconBtn(Icons.favorite_border, () {
-          // TODO: Implement favorite action
-        }, badgeCount: _favoriteCount),
+        Consumer<OpportunityProvider>(
+          builder: (context, opportunityProvider, child) {
+            return CircularIconBtn(
+              icon: Icons.favorite_border,
+              onTap: () {
+                NavigationService.navigateTo(Routes.wishlistScreen);
+              },
+              badgeCount: opportunityProvider.favoriteCount,
+            );
+          },
+        ),
         SizedBox(width: 8.w),
-        _buildCircularIconBtn(Icons.notifications_none, () {
-          // TODO: Implement notifications action
-        }),
+        CircularIconBtn(
+          icon: Icons.notifications_none,
+          onTap: () {
+            // TODO: Implement notifications action
+          },
+        ),
       ],
-    );
-  }
-
-  Widget _buildCircularIconBtn(
-    IconData icon,
-    VoidCallback onTap, {
-    int badgeCount = 0,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 44.w,
-        height: 44.w,
-        decoration: BoxDecoration(
-          color: AppColor.bgColor,
-          borderRadius: BorderRadius.circular(100.r),
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.blackColor.withOpacity(0.2),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Center(
-              child: Icon(icon, color: AppColor.textColor, size: 22.sp),
-            ),
-            if (badgeCount > 0)
-              Positioned(
-                top: -01.h,
-                right: -01.w,
-                child: Container(
-                  padding: EdgeInsets.all(4.w),
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  constraints: BoxConstraints(minWidth: 16.w, minHeight: 16.w),
-                  child: Center(
-                    child: Text(
-                      badgeCount.toString(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -282,19 +210,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           GestureDetector(
             onTap: () {
-              showModalBottomSheet(
+              showDialog(
                 context: context,
                 builder: (context) {
-                  return Container(
-                    height: 200.h,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.r),
-                        topRight: Radius.circular(20.r),
-                      ),
-                    ),
-                  );
+                  return const FilterDialog();
                 },
               );
             },
@@ -322,7 +241,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            NavigationService.navigateTo(Routes.allOpportunitiesScreen);
+          },
           child: Text(
             'View all',
             style: TextStyle(

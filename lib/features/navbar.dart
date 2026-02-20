@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
-import 'package:ibraheemaltamim_flutter/features/chat/presentation/chat_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/message/presentation/message_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/profile_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/service/presentation/service_screen.dart';
 
 class Navbar extends StatefulWidget {
-  const Navbar({super.key});
+  final int? pageNum;
+  const Navbar({super.key, this.pageNum});
 
   @override
   State<Navbar> createState() => _NavbarState();
@@ -20,7 +21,7 @@ class _NavbarState extends State<Navbar> {
   final List<Widget> _screens = [
     HomeScreen(),
     ServiceScreen(),
-    ChatScreen(),
+    MessageScreen(),
     ProfileScreen(),
   ];
 

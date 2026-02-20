@@ -4,7 +4,10 @@ import 'package:ibraheemaltamim_flutter/features/auth/login/presentation/login_s
 import 'package:ibraheemaltamim_flutter/features/auth/otp/presentation/register_otp_verification_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/register/presentation/register_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/set_new_password/presentation/set_new_password_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/home/presentation/all_opportunities_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/home/presentation/opportunity_detail_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/home/presentation/wishlist_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/navbar.dart';
 
 final class Routes {
@@ -19,6 +22,9 @@ final class Routes {
   static const String homeScreen = '/homeScreen';
   static const String setNewPasswordScreen = '/setNewPasswordScreen';
   static const String navbar = '/navbar';
+  static const String allOpportunitiesScreen = '/allOpportunitiesScreen';
+  static const String wishlistScreen = '/wishlistScreen';
+  static const String opportunityDetail = '/opportunityDetail';
 }
 
 final class RouteGenerator {
@@ -76,6 +82,46 @@ final class RouteGenerator {
         return Platform.isAndroid
             ? _FadedTransitionRoute(widget: Navbar(), settings: settings)
             : CupertinoPageRoute(builder: (context) => Navbar());
+
+      // ---------- All Opportunities Screen ----------
+      case Routes.allOpportunitiesScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: AllOpportunitiesScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => AllOpportunitiesScreen(),
+              );
+
+      // ---------- Wishlist Screen ----------
+      case Routes.wishlistScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: WishlistScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => WishlistScreen());
+
+      // ---------- Opportunity Details Screen ----------
+      case Routes.opportunityDetail:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: OpportunityDetailScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => OpportunityDetailScreen(),
+              );
+
+      // case Routes.bottomNavBar:
+      //   final args = settings.arguments as Map;
+      //   return Platform.isAndroid
+      //       ? _FadedTransitionRoute(
+      //           widget: BottomNavBar(pageNum: args["pageNum"]),
+      //           settings: settings)
+      //       : CupertinoPageRoute(
+      //           builder: (context) => BottomNavBar(pageNum: args["pageNum"]));
 
       // return Platform.isAndroid
       //     ? _FadedTransitionRoute(
@@ -158,15 +204,6 @@ final class RouteGenerator {
       //       ? _FadedTransitionRoute(
       //           widget: const SupportScreen(), settings: settings)
       //       : CupertinoPageRoute(builder: (context) => const SupportScreen());
-
-      // case Routes.bottomNavBar:
-      //   final args = settings.arguments as Map;
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: BottomNavBar(pageNum: args["pageNum"]),
-      //           settings: settings)
-      //       : CupertinoPageRoute(
-      //           builder: (context) => BottomNavBar(pageNum: args["pageNum"]));
 
       default:
         return null;

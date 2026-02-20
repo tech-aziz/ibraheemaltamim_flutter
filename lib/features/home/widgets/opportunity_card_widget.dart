@@ -1,50 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
+import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/provider/opportunity_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_model.dart';
 
 class OpportunityCard extends StatefulWidget {
+  final List<OpportunityModel> opportunities;
   final Function(int count)? onFavoriteCountChanged;
-  const OpportunityCard({super.key, this.onFavoriteCountChanged});
+  const OpportunityCard({
+    super.key,
+    required this.opportunities,
+    this.onFavoriteCountChanged,
+  });
 
   @override
   State<OpportunityCard> createState() => _OpportunityCardState();
 }
 
 class _OpportunityCardState extends State<OpportunityCard> {
-  final List<OpportunityModel> _opportunities = [
-    OpportunityModel(
-      title: 'Assessing the Efficacy and Safety',
-      description:
-          'Explore gene therapy approaches for rare genetic diseases with our multidisciplinary team.',
-      doctor: 'Dr. Jhon Smith',
-      deadline: 'Mar 15, 2026',
-      category: 'Neurologist',
-      imageUrl: 'assets/images/img1.png',
-      isFavorite: false,
-    ),
-    OpportunityModel(
-      title: 'Assessing the Efficacy and Safety',
-      description:
-          'Explore gene therapy approaches for rare genetic diseases with our multidisciplinary team.',
-      doctor: 'Dr. Sarah Chen',
-      deadline: 'Mar 15, 2026',
-      category: 'Neurologist',
-      imageUrl: 'assets/images/img2.png',
-      isFavorite: false,
-    ),
-  ];
-
   void _toggleFavorite(int index) {
-    setState(() {
-      final bool currentFavorite = _opportunities[index].isFavorite;
-      _opportunities[index] = _opportunities[index].copyWith(
-        isFavorite: !currentFavorite,
-      );
-    });
+    Provider.of<OpportunityProvider>(
+      context,
+      listen: false,
+    ).toggleFavorite(index);
+
     if (widget.onFavoriteCountChanged != null) {
-      int count = _opportunities.where((o) => o.isFavorite).length;
-      widget.onFavoriteCountChanged!(count);
+      final provider = Provider.of<OpportunityProvider>(context, listen: false);
+      widget.onFavoriteCountChanged!(provider.favoriteCount);
     }
   }
 
@@ -78,7 +63,7 @@ class _OpportunityCardState extends State<OpportunityCard> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: _opportunities.asMap().entries.map((entry) {
+      children: widget.opportunities.asMap().entries.map((entry) {
         final int index = entry.key;
         final model = entry.value;
         return Padding(
@@ -144,10 +129,8 @@ class _OpportunityCardState extends State<OpportunityCard> {
                         onTap: () => _toggleFavorite(index),
                         child: Container(
                           padding: EdgeInsets.all(8.w),
-                          decoration: BoxDecoration(
-                            color: model.isFavorite == true
-                                ? Colors.red
-                                : Colors.white,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -155,7 +138,7 @@ class _OpportunityCardState extends State<OpportunityCard> {
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                             color: model.isFavorite == true
-                                ? Colors.white
+                                ? Colors.red
                                 : AppColor.textColor,
                             size: 20.sp,
                           ),
@@ -197,7 +180,12 @@ class _OpportunityCardState extends State<OpportunityCard> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            NavigationService.navigateTo(
+                              Routes.opportunityDetail,
+                             
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xff000066),
                             padding: EdgeInsets.symmetric(vertical: 15.h),

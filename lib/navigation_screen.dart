@@ -6,8 +6,8 @@ import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_fonts.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_icons.dart';
-import 'package:ibraheemaltamim_flutter/features/chat/presentation/chat_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/message/presentation/message_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/profile_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/service/presentation/service_screen.dart';
 import 'package:ibraheemaltamim_flutter/helpers/helper_methods.dart';
@@ -26,7 +26,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   final List<StatefulWidget> _screens = [
     HomeScreen(),
     ServiceScreen(),
-    ChatScreen(),
+    MessageScreen(),
     ProfileScreen(),
   ];
 
