@@ -4,6 +4,7 @@ import 'package:ibraheemaltamim_flutter/features/auth/forget_password/presentati
 import 'package:ibraheemaltamim_flutter/features/navbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -248,7 +249,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                 if (_formKey.currentState!.validate()) {
                                   print("Form Valid ✅");
                                   NavigationService.navigateToReplacement(
-                                  Routes.navbar,
+                                    Routes.navbar,
+                                  );
+                                  ToastUtil.showShortToast(
+                                    "Successfully Logged In",
                                   );
                                 }
                               },

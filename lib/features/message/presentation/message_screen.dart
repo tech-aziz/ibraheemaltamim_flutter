@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
+import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
@@ -78,7 +79,14 @@ class _MessageScreenState extends State<MessageScreen> {
           children: [
             Column(
               children: [
-                _buildHeader(),
+                CustomAppbar(
+                  title: 'Messages',
+                  onTap: () {
+                    NavigationService.navigateToWithArgs(Routes.navbar, {
+                      "pageNum": 0,
+                    });
+                  },
+                ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: _buildSearchBar(),

@@ -6,9 +6,10 @@ import 'package:ibraheemaltamim_flutter/common_widgets/circular_icon_btn.dart';
 
 class CustomAppbar extends StatefulWidget {
   final String title;
+  final Widget? trailing;
   final void Function()? onTap;
 
-  CustomAppbar({super.key, this.onTap, required this.title});
+  CustomAppbar({super.key, this.onTap, required this.title, this.trailing});
 
   @override
   State<CustomAppbar> createState() => _CustomAppbarState();
@@ -17,20 +18,36 @@ class CustomAppbar extends StatefulWidget {
 class _CustomAppbarState extends State<CustomAppbar> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CircularIconBtn(icon: Icons.arrow_back, onTap: widget.onTap ?? () {}),
+    return Padding(
+      padding: EdgeInsets.all(20.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              CircularIconBtn(
+                icon: Icons.arrow_back,
+                onTap:
+                    widget.onTap ??
+                    () {
+                      Navigator.pop(context);
+                    },
+              ),
 
-        SizedBox(width: 12.w),
-        Text(
-          widget.title,
-          style: TextStyle(
-            color: AppColor.textColor,
-            fontSize: 22.sp,
-            fontWeight: FontWeight.bold,
+              SizedBox(width: 12.w),
+              Text(
+                widget.title,
+                style: TextStyle(
+                  color: AppColor.textColor,
+                  fontSize: 22.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+          widget.trailing ?? const SizedBox.shrink(),
+        ],
+      ),
     );
   }
 }

@@ -184,6 +184,12 @@ class _RegisterOtpVerificationScreenState
                               });
 
                               try {
+                                NavigationService.navigateToReplacement(
+                                  Routes.loginScreen,
+                                );
+                                ToastUtil.showShortToast(
+                                  "Successfully Verified",
+                                );
                                 //final formattedPhone = '${widget.phoneNumber}';
 
                                 // final success = await registerVerifyOtpRxObj

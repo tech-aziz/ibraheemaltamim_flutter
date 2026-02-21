@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 import 'package:intl/intl.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -195,6 +196,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Routes.registerOtpVerificationScreen,
                           {"email": _emailController.text},
                         );
+                        ToastUtil.showShortToast("Successfully Registered");
                       }
                     },
                     style: ElevatedButton.styleFrom(

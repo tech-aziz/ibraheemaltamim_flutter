@@ -5,6 +5,7 @@ import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_icons.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -182,6 +183,9 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                     Routes.setNewPasswordScreen,
                                   );
                                 }
+                                ToastUtil.showShortToast(
+                                  "Successfully Sent Code",
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColor.buttonColor,

@@ -6,9 +6,11 @@ import 'package:ibraheemaltamim_flutter/features/auth/register/presentation/regi
 import 'package:ibraheemaltamim_flutter/features/auth/set_new_password/presentation/set_new_password_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/all_opportunities_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/home/presentation/notification_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/opportunity_detail_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/wishlist_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/navbar.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/presentation/edit_profile_screen.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
@@ -25,6 +27,8 @@ final class Routes {
   static const String allOpportunitiesScreen = '/allOpportunitiesScreen';
   static const String wishlistScreen = '/wishlistScreen';
   static const String opportunityDetail = '/opportunityDetail';
+  static const String notificationScreen = '/notificationScreen';
+  static const String editProfileScreen = '/editProfileScreen';
 }
 
 final class RouteGenerator {
@@ -119,6 +123,24 @@ final class RouteGenerator {
             : CupertinoPageRoute(
                 builder: (context) => OpportunityDetailScreen(),
               );
+
+      // ---------- Notification Screen ----------
+      case Routes.notificationScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: NotificationScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => NotificationScreen());
+
+      // ---------- Edit Profile Screen ----------
+      case Routes.editProfileScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: EditProfileScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => EditProfileScreen());
 
       // case Routes.bottomNavBar:
       //   final args = settings.arguments as Map;

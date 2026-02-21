@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 
 class SetNewPasswordScreen extends StatefulWidget {
   const SetNewPasswordScreen({super.key});
@@ -243,6 +244,9 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
                                     Routes.loginScreen,
                                   );
                                 }
+                                ToastUtil.showShortToast(
+                                  "Password Changed Successfully",
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColor.buttonColor,

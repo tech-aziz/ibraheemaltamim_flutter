@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
         CircularIconBtn(
           icon: Icons.notifications_none,
           onTap: () {
-            // TODO: Implement notifications action
+            NavigationService.navigateTo(Routes.notificationScreen);
           },
         ),
       ],
