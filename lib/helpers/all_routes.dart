@@ -79,9 +79,15 @@ final class RouteGenerator {
 
       // ---------- Navbar ----------
       case Routes.navbar:
+        final args = settings.arguments as Map<String, dynamic>?;
         return Platform.isAndroid
-            ? _FadedTransitionRoute(widget: Navbar(), settings: settings)
-            : CupertinoPageRoute(builder: (context) => Navbar());
+            ? _FadedTransitionRoute(
+                widget: Navbar(pageNum: args?['pageNum']),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => Navbar(pageNum: args?['pageNum']),
+              );
 
       // ---------- All Opportunities Screen ----------
       case Routes.allOpportunitiesScreen:

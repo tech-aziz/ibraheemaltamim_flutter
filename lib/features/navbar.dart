@@ -17,6 +17,13 @@ class Navbar extends StatefulWidget {
 
 class _NavbarState extends State<Navbar> {
   int _selectedIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.pageNum != null) {
+      _selectedIndex = widget.pageNum!;
+    }
+  }
 
   final List<Widget> _screens = [
     HomeScreen(),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
+import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
 
@@ -136,7 +137,9 @@ class _MessageScreenState extends State<MessageScreen> {
         children: [
           GestureDetector(
             onTap: () {
-              // NavigationService.navigateTo(Routes.navbar, arguments: {"pageNum": 0});
+              NavigationService.navigateToWithArgs(Routes.navbar, {
+                "pageNum": 0,
+              });
             },
             child: Container(
               padding: EdgeInsets.all(10.w),
