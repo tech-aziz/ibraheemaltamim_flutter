@@ -174,7 +174,7 @@ final class RouteGenerator {
               )
             : CupertinoPageRoute(builder: (context) => PaymentSuccessScreen());
 
-      // ---------- Profile Screen ----------
+      // ---------- Profile Screens ----------
       case Routes.profileScreen:
         return Platform.isAndroid
             ? _FadedTransitionRoute(widget: ProfileScreen(), settings: settings)
