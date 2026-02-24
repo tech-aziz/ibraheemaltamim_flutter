@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/presentation/profile_screen.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
@@ -26,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _searchController.dispose();
     super.dispose();
   }
-
 
   ImageProvider _getImageProvider(String imageUrl) {
     final String cleanUrl = imageUrl.trim();
@@ -135,26 +135,35 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildHeader() {
     return Row(
       children: [
-        Container(
-          width: 50.w,
-          height: 50.w,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            image: DecorationImage(
-              image: _getImageProvider('assets/images/person.png'),
-              fit: BoxFit.cover,
+        // ProfileScreen
+        GestureDetector(
+          onTap: () {
+            NavigationService.navigateTo(Routes.profileScreen);
+          },
+          child: Row(
+            children: [
+              Container(
+                width: 50.w,
+                height: 50.w,
+                decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: _getImageProvider('assets/images/person.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-          ),
-        ),
-        SizedBox(width: 12.w),
-        Text(
-          'Hi, Jenny',
-          style: TextStyle(
-            color: AppColor.textColor,
-            fontSize: 22.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+            SizedBox(width: 12.w),
+            Text(
+              'Hi, Jenny',
+              style: TextStyle(
+                color: AppColor.textColor,
+                fontSize: 22.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),),
         const Spacer(),
         Consumer<OpportunityProvider>(
           builder: (context, opportunityProvider, child) {

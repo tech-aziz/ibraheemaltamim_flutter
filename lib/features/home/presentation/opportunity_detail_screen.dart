@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_icons.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
+import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
 
@@ -166,31 +167,36 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
       ),
       child: Column(
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 30.r,
-                backgroundImage: const AssetImage('assets/images/img1.png'),
-              ),
-              SizedBox(width: 15.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Dr. Jhon Smith',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap: () {
+              NavigationService.navigateTo(Routes.mentorProfileScreen);
+            },
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 30.r,
+                  backgroundImage: const AssetImage('assets/images/img1.png'),
+                ),
+                SizedBox(width: 15.w),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Dr. Jhon Smith',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    'Meta-Analysis',
-                    style: TextStyle(color: Colors.white70, fontSize: 14.sp),
-                  ),
-                ],
-              ),
-            ],
+                    Text(
+                      'Meta-Analysis',
+                      style: TextStyle(color: Colors.white70, fontSize: 14.sp),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 20.h),
           const Divider(color: Colors.white24),
@@ -210,7 +216,9 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                NavigationService.navigateTo(Routes.paymentScreen);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: const Color(0xff00004d),

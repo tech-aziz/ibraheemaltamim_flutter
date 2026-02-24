@@ -26,20 +26,17 @@ class _AllOpportunitiesScreenState extends State<AllOpportunitiesScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      CustomAppbar(
-                        title: 'All Opportunities',
-                        onTap: () {
-                          NavigationService.goBack;
-                        },
-                      ),
-                    ],
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20.h),
+                    CustomAppbar(
+                      title: 'All Opportunities',
+                      onTap: () {
+                        NavigationService.goBack;
+                      },
+                    ),
+                  ],
                 ),
                 Expanded(
                   child: SingleChildScrollView(

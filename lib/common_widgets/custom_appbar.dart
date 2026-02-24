@@ -19,7 +19,7 @@ class _CustomAppbarState extends State<CustomAppbar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 20.h),
+      padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -10,7 +10,11 @@ import 'package:ibraheemaltamim_flutter/features/home/presentation/notification_
 import 'package:ibraheemaltamim_flutter/features/home/presentation/opportunity_detail_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/wishlist_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/navbar.dart';
+import 'package:ibraheemaltamim_flutter/features/payment/presentation/payment_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/payment/presentation/payment_success_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/edit_profile_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/presentation/mentor_profile_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/presentation/profile_screen.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
@@ -29,6 +33,10 @@ final class Routes {
   static const String opportunityDetail = '/opportunityDetail';
   static const String notificationScreen = '/notificationScreen';
   static const String editProfileScreen = '/editProfileScreen';
+  static const String mentorProfileScreen = '/mentorProfileScreen';
+  static const String paymentScreen = '/paymentScreen';
+  static const String paymentSuccessScreen = '/paymentSuccessScreen';
+  static const String profileScreen = '/profileScreen';
 }
 
 final class RouteGenerator {
@@ -141,6 +149,36 @@ final class RouteGenerator {
                 settings: settings,
               )
             : CupertinoPageRoute(builder: (context) => EditProfileScreen());
+
+      // ---------- Mentor Profile Screen ----------
+      case Routes.mentorProfileScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: MentorProfileScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => MentorProfileScreen());
+
+      // ---------- Payment Screen ----------
+      case Routes.paymentScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(widget: PaymentScreen(), settings: settings)
+            : CupertinoPageRoute(builder: (context) => PaymentScreen());
+
+      // ---------- Payment Success Screen ----------
+      case Routes.paymentSuccessScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: PaymentSuccessScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => PaymentSuccessScreen());
+
+      // ---------- Profile Screen ----------
+      case Routes.profileScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(widget: ProfileScreen(), settings: settings)
+            : CupertinoPageRoute(builder: (context) => ProfileScreen());
 
       // case Routes.bottomNavBar:
       //   final args = settings.arguments as Map;
