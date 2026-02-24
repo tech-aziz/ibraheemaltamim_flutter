@@ -5,6 +5,7 @@ import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
+import 'package:ibraheemaltamim_flutter/features/message/presentation/chat_screen.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({super.key});
@@ -87,12 +88,12 @@ class _MessageScreenState extends State<MessageScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 20.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: _buildSearchBar(),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 20.h),
                 Expanded(
                   child: ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -176,113 +177,121 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   Widget _buildMessageTile(Map<String, dynamic> data) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15.h),
-      padding: EdgeInsets.all(15.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Stack(
-            children: [
-              CircleAvatar(
-                radius: 30.r,
-                backgroundColor: const Color(0xffe8f6ff),
-                backgroundImage: data['image'] != null
-                    ? AssetImage(data['image'])
-                    : null,
-                child: data['isGroup']
-                    ? Icon(
-                        Icons.groups,
-                        color: const Color(0xff0077b6),
-                        size: 30.sp,
-                      )
-                    : null,
-              ),
-              if (data['isOnline'])
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    width: 14.w,
-                    height: 14.w,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ChatScreen()),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 15.h),
+        padding: EdgeInsets.all(15.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Stack(
+              children: [
+                CircleAvatar(
+                  radius: 30.r,
+                  backgroundColor: const Color(0xffe8f6ff),
+                  backgroundImage: data['image'] != null
+                      ? AssetImage(data['image'])
+                      : null,
+                  child: data['isGroup']
+                      ? Icon(
+                          Icons.groups,
+                          color: const Color(0xff0077b6),
+                          size: 30.sp,
+                        )
+                      : null,
+                ),
+                if (data['isOnline'])
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: 14.w,
+                      height: 14.w,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
                     ),
                   ),
-                ),
-            ],
-          ),
-          SizedBox(width: 15.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      data['name'],
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xff001d61),
-                      ),
-                    ),
-                    Text(
-                      data['time'],
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        data['message'],
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+              ],
+            ),
+            SizedBox(width: 15.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        data['name'],
                         style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.grey[600],
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xff001d61),
                         ),
                       ),
-                    ),
-                    if (data['unreadCount'] > 0)
-                      Container(
-                        padding: EdgeInsets.all(6.w),
-                        decoration: const BoxDecoration(
-                          color: Color(0xff0077b6),
-                          shape: BoxShape.circle,
-                        ),
+                      Text(
+                        data['time'],
+                        style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
                         child: Text(
-                          data['unreadCount'].toString(),
+                          data['message'],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 14.sp,
+                            color: Colors.grey[600],
                           ),
                         ),
                       ),
-                  ],
-                ),
-              ],
+                      if (data['unreadCount'] > 0)
+                        Container(
+                          padding: EdgeInsets.all(6.w),
+                          decoration: const BoxDecoration(
+                            color: Color(0xff0077b6),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            data['unreadCount'].toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
