@@ -69,20 +69,17 @@ class _WishlistScreenState extends State<WishlistScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ------------custom appbar start -----------
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      CustomAppbar(
-                        title: 'Wishlist',
-                        onTap: () {
-                          NavigationService.goBack;
-                        },
-                      ),
-                    ],
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20.h),
+                    CustomAppbar(
+                      title: 'Wishlist',
+                      onTap: () {
+                        NavigationService.goBack;
+                      },
+                    ),
+                  ],
                 ),
                 // ------------custom appbar end-----------
 
@@ -92,7 +89,6 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 20.h),
                         WishlistCardWidget(
                           wishLists: wishLists,
                           onFavoriteCountChanged: (count) {

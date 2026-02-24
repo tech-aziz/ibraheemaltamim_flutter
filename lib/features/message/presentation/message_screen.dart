@@ -87,11 +87,12 @@ class _MessageScreenState extends State<MessageScreen> {
                     });
                   },
                 ),
+                SizedBox(height: 10.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: _buildSearchBar(),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
                 Expanded(
                   child: ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -103,6 +104,7 @@ class _MessageScreenState extends State<MessageScreen> {
                 ),
               ],
             ),
+
             Positioned(
               right: 20.w,
               bottom: 110.h,
@@ -134,51 +136,6 @@ class _MessageScreenState extends State<MessageScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Padding(
-      padding: EdgeInsets.all(20.w),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () {
-              NavigationService.navigateToWithArgs(Routes.navbar, {
-                "pageNum": 0,
-              });
-            },
-            child: Container(
-              padding: EdgeInsets.all(10.w),
-              decoration: BoxDecoration(
-                color: const Color(0xffd1f1f9), // Slightly darker blue than bg
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: const Color(0xff001d61),
-                size: 20.sp,
-              ),
-            ),
-          ),
-          SizedBox(width: 20.w),
-          Text(
-            'Messages',
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xff001d61),
-            ),
-          ),
-        ],
       ),
     );
   }

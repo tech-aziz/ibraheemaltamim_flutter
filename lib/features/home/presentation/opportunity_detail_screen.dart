@@ -24,20 +24,17 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
         child: Column(
           children: [
             // ------------custom appbar start -----------
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20.h),
-                  CustomAppbar(
-                    title: 'Opportunity Details',
-                    onTap: () {
-                      NavigationService.goBack;
-                    },
-                  ),
-                ],
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 20.h),
+                CustomAppbar(
+                  title: 'Opportunity Details',
+                  onTap: () {
+                    NavigationService.goBack;
+                  },
+                ),
+              ],
             ),
 
             // ------------custom appbar end-----------
@@ -50,7 +47,6 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 20.h),
                       // 1. Top Card Component
                       _buildProfileCard(),
                       SizedBox(height: 30.h),
