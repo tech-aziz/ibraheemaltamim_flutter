@@ -37,6 +37,7 @@ final class Routes {
   static const String paymentScreen = '/paymentScreen';
   static const String paymentSuccessScreen = '/paymentSuccessScreen';
   static const String profileScreen = '/profileScreen';
+  static const String notificationsScreen = '/notificationsScreen';
 }
 
 final class RouteGenerator {
@@ -179,6 +180,15 @@ final class RouteGenerator {
         return Platform.isAndroid
             ? _FadedTransitionRoute(widget: ProfileScreen(), settings: settings)
             : CupertinoPageRoute(builder: (context) => ProfileScreen());
+
+      // ---------- Notifications Screen ----------
+      case Routes.notificationsScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: NotificationScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => NotificationScreen());
 
       // case Routes.bottomNavBar:
       //   final args = settings.arguments as Map;

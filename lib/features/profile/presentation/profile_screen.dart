@@ -115,7 +115,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildSettingItem(
                   icon: Icons.notifications_rounded,
                   title: 'Notifications',
-                  onTap: () {},
+                  onTap: () {
+                    NavigationService.navigateTo(Routes.notificationsScreen);
+                  },
                 ),
                 _buildDivider(),
                 _buildSettingItem(

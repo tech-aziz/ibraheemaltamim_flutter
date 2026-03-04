@@ -134,11 +134,11 @@ class _ChatScreenState extends State<ChatScreen> {
               ],
             ),
           ),
-          Icon(
-            Icons.videocam_outlined,
-            color: const Color(0xff000066),
-            size: 30.sp,
-          ),
+          // Icon(
+          //   Icons.videocam_outlined,
+          //   color: const Color(0xff000066),
+          //   size: 30.sp,
+          // ),
         ],
       ),
     );
