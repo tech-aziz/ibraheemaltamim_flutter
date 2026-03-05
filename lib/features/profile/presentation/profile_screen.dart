@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
@@ -5,6 +6,8 @@ import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,36 +22,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              CustomAppbar(
-                title: 'Profile',
-                trailing: GestureDetector(
-                  onTap: () {
-                    NavigationService.navigateTo(Routes.editProfileScreen);
-                  },
-                  child: Icon(
-                    Icons.edit_note_outlined,
-                    color: AppColor.textColor,
-                    size: 28.sp,
-                  ),
-                ),
+        child: Column(
+          children: [
+            CustomAppbar(
+              title: 'Profile',
+              trailing: GestureDetector(
                 onTap: () {
-                  NavigationService.navigateToWithArgs(Routes.navbar, {
-                    "pageNum": 0,
-                  });
+                  NavigationService.navigateTo(Routes.editProfileScreen);
                 },
+                child: Icon(
+                  Icons.edit_note_outlined,
+                  color: AppColor.textColor,
+                  size: 28.sp,
+                ),
               ),
-              // SizedBox(height: 20.h),
-              _buildProfileHeader(),
-              SizedBox(height: 20.h),
-              _buildSettingsSection(),
-              SizedBox(height: 20.h),
-              _buildSignOutButton(),
-              SizedBox(height: 20.h),
-            ],
-          ),
+              onTap: () {
+                NavigationService.navigateToWithArgs(Routes.navbar, {
+                  "pageNum": 0,
+                });
+              },
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildProfileHeader(),
+                    SizedBox(height: 20.h),
+                    _buildSettingsSection(),
+                    SizedBox(height: 20.h),
+                    _buildSignOutButton(),
+                    SizedBox(height: 20.h),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -123,31 +131,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildSettingItem(
                   icon: Icons.description_rounded,
                   title: 'Terms & Conditions',
-                  onTap: () {},
+                  onTap: () {
+                    NavigationService.navigateTo(
+                      Routes.termsAndConditionScreen,
+                    );
+                  },
                 ),
                 _buildDivider(),
                 _buildSettingItem(
                   icon: Icons.ios_share_rounded,
                   title: 'Share The App',
-                  onTap: () {},
+                  onTap: () {
+                    Share.share(
+                      'Check out the Ibraheem Al Tamim app! Experience the best services at your fingertips. Download now: https://play.google.com/store/apps/details?id=com.ibraheemaltamim.app',
+                      subject: 'Ibraheem Al Tamim App',
+                    );
+                  },
                 ),
                 _buildDivider(),
                 _buildSettingItem(
                   icon: Icons.star_border_rounded,
                   title: 'Rate The App',
-                  onTap: () {},
+                  onTap: () {
+                    if (Platform.isAndroid) {
+                      _launchUrl(
+                        'https://play.google.com/store/apps/details?id=com.ibraheemaltamim.app',
+                      );
+                    } else if (Platform.isIOS) {
+                      _launchUrl('https://apps.apple.com/app/id[YOUR_APP_ID]');
+                    }
+                  },
                 ),
                 _buildDivider(),
                 _buildSettingItem(
                   icon: Icons.lock_outline_rounded,
                   title: 'Privacy',
-                  onTap: () {},
+                  onTap: () {
+                    NavigationService.navigateTo(Routes.privacyScreen);
+                  },
                 ),
                 _buildDivider(),
                 _buildSettingItem(
                   title: 'App Version',
                   trailing: Text(
-                    '1.2.3',
+                    '1.0.0',
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: AppColor.textColor.withOpacity(0.6),
@@ -203,6 +230,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       endIndent: 15.w,
       color: Colors.grey.withOpacity(0.2),
     );
+  }
+
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      ToastUtil.showShortToast('Could not launch $url');
+    }
   }
 
   Widget _buildSignOutButton() {

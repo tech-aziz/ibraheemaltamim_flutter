@@ -56,10 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      _buildHeader(),
-                    ],
+                    children: [_buildHeader()],
                   ),
                 ),
                 Expanded(
@@ -99,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Positioned(
               right: 20.w,
-              bottom: 110.h,
+              bottom: 105.h,
               child: GestureDetector(
                 onTap: () => launchWhatsApp(context: context),
                 child: Container(
@@ -146,24 +143,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 50.w,
                 height: 50.w,
                 decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: _getImageProvider('assets/images/person.png'),
-                  fit: BoxFit.cover,
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: _getImageProvider('assets/images/person.png'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(width: 12.w),
-            Text(
-              'Hi, Jenny',
-              style: TextStyle(
-                color: AppColor.textColor,
-                fontSize: 22.sp,
-                fontWeight: FontWeight.bold,
+              SizedBox(width: 12.w),
+              Text(
+                'Hi, Jenny',
+                style: TextStyle(
+                  color: AppColor.textColor,
+                  fontSize: 22.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-          ],
-        ),),
+            ],
+          ),
+        ),
         const Spacer(),
         Consumer<OpportunityProvider>(
           builder: (context, opportunityProvider, child) {

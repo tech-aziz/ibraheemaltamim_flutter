@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -72,7 +73,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 NavigationService.goBack;
               },
               trailing: GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  ToastUtil.showShortToast("Marked all read");
+                  NavigationService.goBack;
+                },
                 child: Text(
                   'Mark all read',
                   style: TextStyle(

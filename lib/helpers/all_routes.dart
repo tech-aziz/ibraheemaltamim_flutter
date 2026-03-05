@@ -14,7 +14,9 @@ import 'package:ibraheemaltamim_flutter/features/payment/presentation/payment_sc
 import 'package:ibraheemaltamim_flutter/features/payment/presentation/payment_success_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/edit_profile_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/mentor_profile_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/presentation/privacy_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/profile_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/presentation/terms_and_condition_screen.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
@@ -38,6 +40,9 @@ final class Routes {
   static const String paymentSuccessScreen = '/paymentSuccessScreen';
   static const String profileScreen = '/profileScreen';
   static const String notificationsScreen = '/notificationsScreen';
+
+  static const String termsAndConditionScreen = '/termsAndConditionScreen';
+  static const String privacyScreen = '/privacyScreen';
 }
 
 final class RouteGenerator {
@@ -189,6 +194,21 @@ final class RouteGenerator {
                 settings: settings,
               )
             : CupertinoPageRoute(builder: (context) => NotificationScreen());
+
+      // ---------- Terms And Condition Screen ----------
+      case Routes.termsAndConditionScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: TermsAndConditionScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(builder: (context) => TermsAndConditionScreen());
+
+      // ---------- Privacy Screen ----------
+      case Routes.privacyScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(widget: PrivacyScreen(), settings: settings)
+            : CupertinoPageRoute(builder: (context) => PrivacyScreen());
 
       // case Routes.bottomNavBar:
       //   final args = settings.arguments as Map;

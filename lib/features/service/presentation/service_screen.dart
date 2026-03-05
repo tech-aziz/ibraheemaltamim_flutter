@@ -128,7 +128,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 10.h),
+
                 Expanded(
                   child: ListView.separated(
                     padding: EdgeInsets.symmetric(
@@ -434,7 +434,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
             // WhatsApp Button
             Positioned(
               right: 20.w,
-              bottom: 110.h,
+              bottom: 105.h,
               child: GestureDetector(
                 onTap: () => launchWhatsApp(context: context),
                 child: Container(

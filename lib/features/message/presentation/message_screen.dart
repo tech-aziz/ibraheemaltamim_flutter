@@ -88,12 +88,11 @@ class _MessageScreenState extends State<MessageScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 20.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: _buildSearchBar(),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
                 Expanded(
                   child: ListView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -108,7 +107,7 @@ class _MessageScreenState extends State<MessageScreen> {
 
             Positioned(
               right: 20.w,
-              bottom: 110.h,
+              bottom: 105.h,
               child: GestureDetector(
                 onTap: () => launchWhatsApp(context: context),
                 child: Container(
