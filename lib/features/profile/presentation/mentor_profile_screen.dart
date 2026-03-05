@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/circular_icon_btn.dart';
+import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 
 class MentorProfileScreen extends StatefulWidget {
   const MentorProfileScreen({super.key});
@@ -19,7 +20,7 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
+              padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 20.h),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: CircularIconBtn(
@@ -36,7 +37,7 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: 10.h),
+                    UIHelper.verticalSpace(10.h),
                     Container(
                       width: 90.w,
                       height: 90.w,

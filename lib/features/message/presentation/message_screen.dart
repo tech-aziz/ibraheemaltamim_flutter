@@ -4,6 +4,7 @@ import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
 import 'package:ibraheemaltamim_flutter/features/message/presentation/chat_screen.dart';
 
@@ -88,6 +89,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     });
                   },
                 ),
+                UIHelper.verticalSpace(10.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: _buildSearchBar(),

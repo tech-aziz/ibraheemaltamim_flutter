@@ -5,6 +5,7 @@ import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/wishlist_model.dart';
+import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -71,7 +72,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20.h),
+                    UIHelper.verticalSpace(10.h),
                     CustomAppbar(
                       title: 'Wishlist',
                       onTap: () {
@@ -88,6 +89,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        UIHelper.verticalSpace(10.h),
                         WishlistCardWidget(
                           wishLists: wishLists,
                           onFavoriteCountChanged: (count) {

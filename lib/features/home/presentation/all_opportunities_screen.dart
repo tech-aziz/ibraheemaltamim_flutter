@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
@@ -43,7 +44,7 @@ class _AllOpportunitiesScreenState extends State<AllOpportunitiesScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 20.h),
+                        UIHelper.verticalSpace(10.h),
                         OpportunityCard(
                           opportunities: opportunityProvider.opportunities,
                           onFavoriteCountChanged: (count) {

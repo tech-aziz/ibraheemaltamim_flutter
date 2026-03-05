@@ -6,6 +6,7 @@ import 'package:ibraheemaltamim_flutter/assets_helper/app_icons.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
 
 class OpportunityDetailScreen extends StatefulWidget {
@@ -48,6 +49,7 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      UIHelper.verticalSpace(10.h),
                       // 1. Top Card Component
                       _buildProfileCard(),
                       SizedBox(height: 30.h),

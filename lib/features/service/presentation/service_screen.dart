@@ -131,9 +131,12 @@ class _ServiceScreenState extends State<ServiceScreen> {
 
                 Expanded(
                   child: ListView.separated(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.w,
-                    ).copyWith(bottom: 100.h),
+                    padding: EdgeInsets.only(
+                      top: 10.h,
+                      left: 20.w,
+                      right: 20.w,
+                      bottom: 100.h,
+                    ),
                     itemCount: services.length,
                     separatorBuilder: (context, index) =>
                         SizedBox(height: 16.h),

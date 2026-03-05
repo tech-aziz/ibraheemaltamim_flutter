@@ -58,6 +58,28 @@ class _NotificationScreenState extends State<NotificationScreen> {
       'iconColor': const Color(0xFF845EF7),
       'isUnread': false,
     },
+    {
+      'title': 'Project Status Update',
+      'description':
+          'Carbon-Fiber-Reinforced PEEK project status changed to "Under Review"',
+      'category': 'Week 7-8: Submission & Review',
+      'time': '1 day ago',
+      'icon': Icons.notifications_none_rounded,
+      'iconBg': const Color(0xFFE7F5FF),
+      'iconColor': const Color(0xFF339AF0),
+      'isUnread': false,
+    },
+    {
+      'title': 'New Team Member Added',
+      'description':
+          'Dr. Sarah Johnson joined as co-researcher on Ophthalmology project',
+      'category': 'Evaluating Innovative Intraoperative Technologies',
+      'time': '2 days ago',
+      'icon': Icons.group_outlined,
+      'iconBg': const Color(0xFFF3F0FF),
+      'iconColor': const Color(0xFF845EF7),
+      'isUnread': false,
+    },
   ];
 
   @override
