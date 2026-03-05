@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_fonts.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_images.dart';
 
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   @override

@@ -50,8 +50,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
           height: 70.h,
           child: CustomNavigationBar(
             iconSize: 24..sp,
-            // strokeColor: AppColor.c0A5B55,
-            // unSelectedColor: AppColor.c0A5B55,
             backgroundColor: Colors.white,
             items: [
               CustomNavigationBarItem(

@@ -27,16 +27,6 @@ final class LocalString extends Translations {
         "Already have an account?":"Already have an account?",
         "log In":"Log In",
 
-
-
-
-
-
-
-
-
-
-
           //Old 
           "Delivery Man Info": "Delivery Man Info",
           "Do you want to exit the app?": "Do you want to exit the app?",

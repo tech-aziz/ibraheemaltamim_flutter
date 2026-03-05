@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
-
 import 'package:ibraheemaltamim_flutter/features/home/model/wishlist_model.dart';
 
 class WishlistScreen extends StatefulWidget {

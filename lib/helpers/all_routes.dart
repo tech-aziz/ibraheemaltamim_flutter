@@ -22,26 +22,50 @@ final class Routes {
   static final Routes _routes = Routes._internal();
   Routes._internal();
   static Routes get instance => _routes;
-
+  // ---------- Register Screen ----------
   static const String registerScreen = '/onboardingScreen';
+  // ---------- Login Screen ----------
   static const String loginScreen = '/loginScreen';
+  // ---------- Register Otp Verification Screen ----------
   static const String registerOtpVerificationScreen =
       '/registerOtpVerificationScreen';
+  // ---------- Login Verification Screen ----------
+  static const String loginVerificationScreen = '/loginVerificationScreen';
+  // ---------- Enterprice Login Screen ----------
+  static const String enterpriceLoginScreen = '/enterpriceLoginScreen';
+  // ---------- Select Area Screen ----------
+  static const String selectAreaScreen = '/selectAreaScreen';
+  // ---------- Profile Setup Screen ----------
+  static const String profileSetupScreen = '/profileSetupScreen';
+  // ---------- Home Screen ----------
   static const String homeScreen = '/homeScreen';
+  // ---------- Set New Password Screen ----------
   static const String setNewPasswordScreen = '/setNewPasswordScreen';
+  // ---------- Navbar ----------
   static const String navbar = '/navbar';
+  // ---------- All Opportunities Screen ----------
   static const String allOpportunitiesScreen = '/allOpportunitiesScreen';
+  // ---------- Wishlist Screen ----------
   static const String wishlistScreen = '/wishlistScreen';
+  // ---------- Opportunity Detail Screen ----------
   static const String opportunityDetail = '/opportunityDetail';
+  // ---------- Notification Screen ----------
   static const String notificationScreen = '/notificationScreen';
+  // ---------- Edit Profile Screen ----------
   static const String editProfileScreen = '/editProfileScreen';
+  // ---------- Mentor Profile Screen ----------
   static const String mentorProfileScreen = '/mentorProfileScreen';
+  // ---------- Payment Screen ----------
   static const String paymentScreen = '/paymentScreen';
+  // ---------- Payment Success Screen ----------
   static const String paymentSuccessScreen = '/paymentSuccessScreen';
+  // ---------- Profile Screen ----------
   static const String profileScreen = '/profileScreen';
+  // ---------- Notifications Screen ----------
   static const String notificationsScreen = '/notificationsScreen';
-
+  // ---------- Terms and Condition Screen ----------
   static const String termsAndConditionScreen = '/termsAndConditionScreen';
+  // ---------- Privacy Screen ----------
   static const String privacyScreen = '/privacyScreen';
 }
 
@@ -202,105 +226,15 @@ final class RouteGenerator {
                 widget: TermsAndConditionScreen(),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => TermsAndConditionScreen());
+            : CupertinoPageRoute(
+                builder: (context) => TermsAndConditionScreen(),
+              );
 
       // ---------- Privacy Screen ----------
       case Routes.privacyScreen:
         return Platform.isAndroid
             ? _FadedTransitionRoute(widget: PrivacyScreen(), settings: settings)
             : CupertinoPageRoute(builder: (context) => PrivacyScreen());
-
-      // case Routes.bottomNavBar:
-      //   final args = settings.arguments as Map;
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: BottomNavBar(pageNum: args["pageNum"]),
-      //           settings: settings)
-      //       : CupertinoPageRoute(
-      //           builder: (context) => BottomNavBar(pageNum: args["pageNum"]));
-
-      // return Platform.isAndroid
-      //     ? _FadedTransitionRoute(
-      //         widget: const ProductInputsScreen(), settings: settings)
-      //     : CupertinoPageRoute(
-      //         builder: (context) => const ProductInputsScreen());
-
-      // case Routes.onboardingScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: OnboardingScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => OnboardingScreen());
-
-      // case Routes.loginScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(widget: LoginScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => LoginScreen());
-
-      // case Routes.signupOtpVerificationScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: SignupOtpVerificationScreen(), settings: settings)
-      //       : CupertinoPageRoute(
-      //           builder: (context) => SignupOtpVerificationScreen());
-
-      // case Routes.loginVerificationScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: LoginVerificationScreen(), settings: settings)
-      //       : CupertinoPageRoute(
-      //           builder: (context) => LoginVerificationScreen());
-
-      // case Routes.enterpriceLoginScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: EnterpriceLoginScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => EnterpriceLoginScreen());
-
-      // case Routes.selectAreaScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: SelectAreaScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => SelectAreaScreen());
-
-      // case Routes.profileSetupScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: ProfileSetupScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => ProfileSetupScreen());
-
-      // case Routes.homeScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(widget: HomeScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => HomeScreen());
-      // case Routes.farmersScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(widget: FarmersScreen(), settings: settings)
-      //       : CupertinoPageRoute(
-      //           builder: (contexFarmersScreent) => FarmersScreen());
-
-      // case Routes.pondsScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(widget: PondsScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => PondsScreen());
-
-      // case Routes.mainObservationScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: MainObservationScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => MainObservationScreen());
-
-      // case Routes.knowledgeBaseScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const KnowledgeBaseScreen(), settings: settings)
-      //       : CupertinoPageRoute(
-      //           builder: (context) => const KnowledgeBaseScreen());
-      // case Routes.supportScreen:
-      //   return Platform.isAndroid
-      //       ? _FadedTransitionRoute(
-      //           widget: const SupportScreen(), settings: settings)
-      //       : CupertinoPageRoute(builder: (context) => const SupportScreen());
-
       default:
         return null;
     }
