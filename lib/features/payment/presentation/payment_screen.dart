@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
-import 'package:ibraheemaltamim_flutter/common_widgets/circular_icon_btn.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
@@ -151,35 +150,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildAppBar() {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 20.w,
-        vertical: 15.h,
-      ).copyWith(bottom: 20.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircularIconBtn(
-            icon: Icons.arrow_back,
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          SizedBox(width: 16.w),
-          Text(
-            'Complete Application',
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xff000066),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -380,9 +350,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Simplified representation of Google 'G' using CustomPaint or an icon
-          // Since we might not have a built in widget, we can use a stylized letter G
-          // It's a quick hack to roughly mimic the logo when no asset is available
+ 
           Text(
             'G',
             style: TextStyle(
@@ -391,8 +359,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               color: Colors.red, // Close enough substitute
             ),
           ),
-          // We can just rely on replacing this with real asset later if needed
-          // The image snippet literally just shows a typical Google G icon.
+    
         ],
       ),
     );

@@ -190,35 +190,6 @@ class _RegisterOtpVerificationScreenState
                                 ToastUtil.showShortToast(
                                   "Successfully Verified",
                                 );
-                                //final formattedPhone = '${widget.phoneNumber}';
-
-                                // final success = await registerVerifyOtpRxObj
-                                //     .registerVerifyOtpRx(
-                                //       phone: formattedPhone,
-                                //       otp: otpController.text,
-                                //     )
-                                //     .waitingForFuture();
-
-                                // if (success && mounted) {
-                                //   appData.write(
-                                //       kKeyUserRole,
-                                //       registerVerifyOtpRxObj
-                                //           .dataFetcher.value.data?.role);
-                                //   final role =
-                                //       appData.read(kKeyUserRole).toString();
-
-                                //   role == "property_owner"
-                                //       ? NavigationService.navigateToWithArgs(
-                                //           Routes.personalInformationScreen, {
-                                //           "phoneNumber": formattedPhone,
-                                //         })
-                                //       : NavigationService.navigateToWithArgs(
-                                //           Routes.residentPersonalInformationScreen,
-                                //           {
-                                //               "phoneNumber": formattedPhone,
-                                //             });
-                                // }
-                                NavigationService.navigateTo(Routes.homeScreen);
                               } catch (e) {
                               } finally {
                                 if (mounted) {

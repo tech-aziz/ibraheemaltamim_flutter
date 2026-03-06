@@ -49,9 +49,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildProfileHeader(),
                     SizedBox(height: 20.h),
                     _buildSettingsSection(),
+
                     SizedBox(height: 20.h),
                     _buildSignOutButton(),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: 100.h),
                   ],
                 ),
               ),

@@ -49,6 +49,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       appBar: AppBar(
         backgroundColor: AppColor.bgColor,
         elevation: 0,
+        centerTitle: false,
         leading: IconButton(
           onPressed: () {
             NavigationService.goBack;
