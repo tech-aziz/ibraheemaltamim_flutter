@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
+import 'package:ibraheemaltamim_flutter/common_widgets/custom_logout_widget.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
@@ -248,8 +249,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         height: 55.h,
         child: OutlinedButton(
           onPressed: () {
-            NavigationService.navigateToReplacement(Routes.loginScreen);
-            ToastUtil.showShortToast("Signed out Successfully");
+            showModalBottomSheet(
+              context: context,
+              backgroundColor: Colors.transparent,
+              isScrollControlled: true,
+              builder: (context) => CustomLogoutWidget(),
+            );
           },
           style: OutlinedButton.styleFrom(
             side: BorderSide(color: AppColor.textColor, width: 1.5),

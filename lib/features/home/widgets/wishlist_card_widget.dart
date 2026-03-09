@@ -44,16 +44,32 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
     return NetworkImage(cleanUrl);
   }
 
-  Widget _buildInfoRow(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, color: AppColor.textColor, size: 20.sp),
-        SizedBox(width: 10.w),
-        Text(
-          text,
-          style: TextStyle(color: Colors.grey[700], fontSize: 14.sp),
-        ),
-      ],
+  Widget _buildInfoRow(IconData icon, String text, String? price) {
+    return GestureDetector(
+      onTap: () {
+        NavigationService.navigateTo(Routes.mentorProfileScreen);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: AppColor.textColor, size: 20.sp),
+              SizedBox(width: 10.w),
+              Text(
+                text,
+                style: TextStyle(color: Colors.grey[700], fontSize: 14.sp),
+              ),
+            ],
+          ),
+          price != null
+              ? Text(
+                  '\$${price}',
+                  style: TextStyle(color: AppColor.c03045E, fontSize: 14.sp),
+                )
+              : const SizedBox(),
+        ],
+      ),
     );
   }
 
@@ -166,11 +182,16 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
                         ),
                       ),
                       SizedBox(height: 15.h),
-                      _buildInfoRow(Icons.person_outline, model.doctor),
+                      _buildInfoRow(
+                        Icons.person_outline,
+                        model.doctor,
+                        '${120}',
+                      ),
                       SizedBox(height: 8.h),
                       _buildInfoRow(
                         Icons.calendar_month_outlined,
                         'Deadline: ${model.deadline}',
+                        null,
                       ),
                       SizedBox(height: 20.h),
                       SizedBox(

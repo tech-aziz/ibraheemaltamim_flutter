@@ -174,28 +174,42 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
               NavigationService.navigateTo(Routes.mentorProfileScreen);
             },
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CircleAvatar(
-                  radius: 30.r,
-                  backgroundImage: const AssetImage('assets/images/img1.png'),
-                ),
-                SizedBox(width: 15.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Text(
-                      'Dr. Jhon Smith',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
+                    CircleAvatar(
+                      radius: 30.r,
+                      backgroundImage: const AssetImage(
+                        'assets/images/img1.png',
                       ),
                     ),
-                    Text(
-                      'Meta-Analysis',
-                      style: TextStyle(color: Colors.white70, fontSize: 14.sp),
+                    SizedBox(width: 15.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Dr. Jhon Smith',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Meta-Analysis',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
+                ),
+                Text(
+                  '\$120',
+                  style: TextStyle(color: AppColor.cFFFFFF, fontSize: 16.sp),
                 ),
               ],
             ),

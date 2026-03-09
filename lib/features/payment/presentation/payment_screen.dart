@@ -24,7 +24,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           children: [
             CustomAppbar(
-              title: 'Messages',
+              title: 'Complete Application',
               onTap: () {
                 NavigationService.navigateToWithArgs(Routes.navbar, {
                   "pageNum": 0,
@@ -350,7 +350,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       child: Stack(
         alignment: Alignment.center,
         children: [
- 
           Text(
             'G',
             style: TextStyle(
@@ -359,7 +358,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               color: Colors.red, // Close enough substitute
             ),
           ),
-    
         ],
       ),
     );

@@ -3,6 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_fonts.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_buttons.dart';
+import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
+import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 
 class CustomLogoutWidget extends StatelessWidget {
@@ -12,7 +15,7 @@ class CustomLogoutWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).padding.bottom + 110.h,
+        bottom: MediaQuery.of(context).padding.bottom + 10.h,
       ),
       decoration: BoxDecoration(
         color: AppColor.cFFFFFF,
@@ -37,10 +40,10 @@ class CustomLogoutWidget extends StatelessWidget {
           UIHelper.verticalSpace(12.h),
           Text(
             'Log Out?',
-            style: TextFontStyle.textStyle13PoppinsW500.copyWith(
+            style: TextStyle(
               fontSize: 22.sp,
-              color: AppColor.c266FEF,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.bold,
+              color: AppColor.textColor,
             ),
           ),
           UIHelper.verticalSpace(6.h),
@@ -57,10 +60,7 @@ class CustomLogoutWidget extends StatelessWidget {
             ),
           ),
           UIHelper.verticalSpace(6.h),
-          Divider(
-            color: AppColor.cEEEEEE,
-            thickness: 1.sp,
-          ),
+          Divider(color: AppColor.cEEEEEE, thickness: 1.sp),
           UIHelper.verticalSpace(6.h),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
@@ -84,17 +84,16 @@ class CustomLogoutWidget extends StatelessWidget {
                 Expanded(
                   child: CustomButtons(
                     name: 'Yes, Log out',
-                    bgColor: AppColor.c266FEF,
+                    bgColor: AppColor.textColor,
                     callback: () async {
-                      // await logOutRx.logout().waitingForFuture();
-                      // appData.write(kKeyIsLoggedIn, false);
+                      // await totalDataClean();
                       // appData.remove(kKeyAccessToken);
                       // appData.remove(kKeyUserRole);
                       // DioSingleton.instance.update('');
-                      // totalDataClean();
-                      // NavigationService.navigateToUntilReplacement(
-                      //   Routes.loginScreen,
-                      // );
+                      NavigationService.navigateToUntilReplacement(
+                        Routes.loginScreen,
+                      );
+                      ToastUtil.showShortToast("Signed out Successfully");
                     },
                     textStyle: TextFontStyle.textStyle13PoppinsW500.copyWith(
                       fontSize: 16.sp,
