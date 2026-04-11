@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
-import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 import 'package:intl/intl.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -18,35 +18,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _birthdayController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2040),
-    );
-    if (picked != null) {
-      setState(() {
-        _birthdayController.text = DateFormat('MM/dd/yyyy').format(picked);
-      });
-      print("Selected Birthday: ${_birthdayController.text}");
-      _formKey.currentState?.validate();
-    }
-  }
 
   String? _nameValidator(String? value) {
     if (value == null || value.trim().isEmpty) {
       return "Name is required";
-    }
-    return null;
-  }
-
-  String? _birthdayValidator(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "Birthday is required";
     }
     return null;
   }
@@ -72,12 +52,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return null;
   }
 
+  String? _confirmPasswordValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "Confirm password is required";
+    }
+    if (value != _passwordController.text) {
+      return "Passwords do not match";
+    }
+    return null;
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
     _birthdayController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -130,26 +121,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 SizedBox(height: 24.h),
 
-                // Birthday Field
-                _buildInputField(
-                  label: 'Birthday',
-                  hint: 'MM/DD/YYYY',
-                  controller: _birthdayController,
-                  validator: _birthdayValidator,
-                  keyboardType: TextInputType.datetime,
-                  readOnly: true,
-                  onTap: () => _selectDate(context),
-                  suffixIcon: IconButton(
-                    onPressed: () => _selectDate(context),
-                    icon: Icon(
-                      Icons.calendar_month_outlined,
-                      color: AppColor.hintColor,
-                      size: 22,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 24.h),
-
                 // Email Field
                 _buildInputField(
                   label: 'Email',
@@ -181,6 +152,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     },
                   ),
                 ),
+                SizedBox(height: 24.h),
+
+                // Confirm Password Field
+                _buildInputField(
+                  label: 'Confirm Password',
+                  hint: 'Confirm Your Password',
+                  controller: _confirmPasswordController,
+                  validator: _confirmPasswordValidator,
+                  obscureText: _obscureConfirmPassword,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureConfirmPassword
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                      color: Colors.grey[600],
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      });
+                    },
+                  ),
+                ),
                 SizedBox(height: 32.h),
 
                 // Next Button
@@ -188,17 +182,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      if (_formKey.currentState!.validate()) {
-                        print("Registration Form Valid ✅");
-                        NavigationService.navigateToWithArgs(
-                          Routes.registerOtpVerificationScreen,
-                          {"email": _emailController.text},
-                        );
-                        ToastUtil.showShortToast("Successfully Registered");
-                      }
-                    },
+                    onPressed: _isLoading
+                        ? null
+                        : () async {
+                            FocusScope.of(context).unfocus();
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                _isLoading = true;
+                              });
+
+                              final result = await registerRxObj.registerRx(
+                                name: _nameController.text,
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                                passwordConfirmation: _confirmPasswordController.text,
+                              );
+
+                              setState(() {
+                                _isLoading = false;
+                              });
+
+                              if (result != null) {
+                                NavigationService.navigateToWithArgs(
+                                  Routes.registerOtpVerificationScreen,
+                                  {"email": _emailController.text},
+                                );
+                              }
+                            }
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.darkNavy,
                       foregroundColor: Colors.white,
@@ -207,14 +218,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(32),
                       ),
                     ),
-                    child: Text(
-                      'Next',
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
+                    child: _isLoading
+                        ? SizedBox(
+                            width: 20.w,
+                            height: 20.w,
+                            child: const CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text(
+                            'Next',
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(height: 60),

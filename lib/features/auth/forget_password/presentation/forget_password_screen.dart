@@ -6,6 +6,7 @@ import 'package:ibraheemaltamim_flutter/assets_helper/app_icons.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -18,6 +19,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   // ------------ Variables start------------
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   // ------------ Variables end------------
 
@@ -83,7 +85,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Form(
                       key: _formKey,
-
                       child: Column(
                         children: [
                           const SizedBox(height: 60),
@@ -121,7 +122,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                               const SizedBox(height: 8),
                               TextFormField(
                                 validator: _emailValidator,
-
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 cursorRadius: const Radius.circular(12),
@@ -157,11 +157,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                   ),
                                   focusedErrorBorder:
                                       const UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.red,
-                                          width: 2.0,
-                                        ),
-                                      ),
+                                    borderSide: BorderSide(
+                                      color: Colors.red,
+                                      width: 2.0,
+                                    ),
+                                  ),
                                   fillColor: const Color(0xFFCAF0F8),
                                 ),
                               ),
@@ -176,17 +176,31 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             width: double.infinity,
                             height: 56,
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 FocusScope.of(context).unfocus();
                                 if (_formKey.currentState!.validate()) {
-                                  print("Form Valid ✅");
-                                  NavigationService.navigateTo(
-                                    Routes.setNewPasswordScreen,
-                                  );
+                                  if (!_isLoading) {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+
+                                    final result = await forgetPasswordRxObj
+                                        .forgetPasswordRx(
+                                      email: _emailController.text.trim(),
+                                    );
+
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+
+                                    if (result) {
+                                      NavigationService.navigateToWithArgs(
+                                        Routes.setNewPasswordScreen,
+                                        {"email": _emailController.text.trim()},
+                                      );
+                                    }
+                                  }
                                 }
-                                ToastUtil.showShortToast(
-                                  "Successfully Sent Code",
-                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColor.buttonColor,
@@ -195,14 +209,18 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                 ),
                                 elevation: 0,
                               ),
-                              child: const Text(
-                                'Send Code',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : const Text(
+                                      'Send Code',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                             ),
                           ),
 

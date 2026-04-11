@@ -112,12 +112,16 @@ final class RouteGenerator {
             : CupertinoPageRoute(builder: (context) => HomeScreen());
       // ---------- Set New Password Screen ----------
       case Routes.setNewPasswordScreen:
+        final args = settings.arguments as Map;
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: SetNewPasswordScreen(),
+                widget: SetNewPasswordScreen(email: args['email']),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => SetNewPasswordScreen());
+            : CupertinoPageRoute(
+                builder: (context) =>
+                    SetNewPasswordScreen(email: args['email']),
+              );
 
       // ---------- Navbar ----------
       case Routes.navbar:

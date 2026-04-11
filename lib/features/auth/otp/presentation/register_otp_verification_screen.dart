@@ -8,10 +8,12 @@ import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_fonts.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_button.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_text_widget.dart';
+import 'dart:async';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 
 class RegisterOtpVerificationScreen extends StatefulWidget {
   final String email;
@@ -27,9 +29,38 @@ class _RegisterOtpVerificationScreenState
   final _formKey = GlobalKey<FormState>();
   final TextEditingController otpController = TextEditingController();
   bool _isLoading = false;
+  Timer? _timer;
+  int _remainingSeconds = 60;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _remainingSeconds = 60;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
+        setState(() {
+          _remainingSeconds--;
+        });
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  String get _formattedTime {
+    int min = _remainingSeconds ~/ 60;
+    int sec = _remainingSeconds % 60;
+    return '$min:${sec.toString().padLeft(2, '0')} min';
+  }
 
   @override
   void dispose() {
+    _timer?.cancel();
     otpController.dispose();
     super.dispose();
   }
@@ -145,11 +176,15 @@ class _RegisterOtpVerificationScreenState
                                       ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () async {
-                                      // final formattedPhone =
-                                      //     '${widget.phoneNumber}';
-                                      // await resendOtpRxObj
-                                      //     .resendOtpRx(phone: formattedPhone)
-                                      //     .waitingForFuture();
+                                      if (_remainingSeconds == 0) {
+                                        final result = await resendOtpRxObj.resendOtpRx(email: widget.email);
+                                        if (result != null) {
+                                          _startTimer();
+                                          ToastUtil.showShortToast("OTP sent successfully");
+                                        }
+                                      } else {
+                                        ToastUtil.showShortToast("Please wait for the timer to finish before resending");
+                                      }
                                     },
                                 ),
                               ],
@@ -158,7 +193,7 @@ class _RegisterOtpVerificationScreenState
                         ),
                         UIHelper.verticalSpace(15.h),
                         Text(
-                          '1:00 min',
+                          _formattedTime,
                           style: TextFontStyle.textStyle13PoppinsW500.copyWith(
                             color: AppColor.textColor,
                             height: 1.2,
@@ -172,6 +207,10 @@ class _RegisterOtpVerificationScreenState
                           backgroundColor: AppColor.textColor,
                           onPressed: () async {
                             if (!_isLoading) {
+                              if (_remainingSeconds == 0) {
+                                ToastUtil.showShortToast('OTP has expired. Please request a new one'.tr);
+                                return;
+                              }
                               if (otpController.text.length != 4) {
                                 ToastUtil.showShortToast(
                                   'Please enter a valid 4-digit OTP'.tr,
@@ -184,13 +223,21 @@ class _RegisterOtpVerificationScreenState
                               });
 
                               try {
-                                NavigationService.navigateToReplacement(
-                                  Routes.loginScreen,
+                                final result = await verifyRegisterOtpRxObj.verifyRegisterOtpRx(
+                                  email: widget.email,
+                                  otp: otpController.text,
                                 );
-                                ToastUtil.showShortToast(
-                                  "Successfully Verified",
-                                );
+
+                                if (result != null) {
+                                  NavigationService.navigateToReplacement(
+                                    Routes.loginScreen,
+                                  );
+                                  ToastUtil.showShortToast(
+                                    "Email verified successfully.",
+                                  );
+                                }
                               } catch (e) {
+                                // errors are handled within rx.dart already
                               } finally {
                                 if (mounted) {
                                   setState(() {

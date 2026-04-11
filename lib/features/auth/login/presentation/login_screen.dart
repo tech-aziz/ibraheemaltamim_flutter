@@ -4,6 +4,7 @@ import 'package:ibraheemaltamim_flutter/features/auth/forget_password/presentati
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   // ------------ Variables end------------
@@ -71,7 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Form(
                       key: _formKey,
-
                       child: Column(
                         children: [
                           const SizedBox(height: 60),
@@ -109,7 +110,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               const SizedBox(height: 8),
                               TextFormField(
                                 validator: _emailValidator,
-
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 cursorRadius: const Radius.circular(12),
@@ -145,11 +145,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   focusedErrorBorder:
                                       const UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.red,
-                                          width: 2.0,
-                                        ),
-                                      ),
+                                    borderSide: BorderSide(
+                                      color: Colors.red,
+                                      width: 2.0,
+                                    ),
+                                  ),
                                   fillColor: const Color(0xFFCAF0F8),
                                 ),
                               ),
@@ -184,7 +184,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   hintText: 'Enter Your Password',
                                   hintStyle: TextStyle(
                                     color: AppColor.hintColor.withOpacity(0.5),
-
                                     fontSize: 14,
                                   ),
                                   fillColor: const Color(0xFFCAF0F8),
@@ -212,11 +211,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   focusedErrorBorder:
                                       const UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.red,
-                                          width: 2.0,
-                                        ),
-                                      ),
+                                    borderSide: BorderSide(
+                                      color: Colors.red,
+                                      width: 2.0,
+                                    ),
+                                  ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       _obscurePassword
@@ -243,16 +242,33 @@ class _LoginScreenState extends State<LoginScreen> {
                             width: double.infinity,
                             height: 56,
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 FocusScope.of(context).unfocus();
                                 if (_formKey.currentState!.validate()) {
-                                  print("Form Valid ✅");
-                                  NavigationService.navigateToReplacement(
-                                    Routes.navbar,
-                                  );
-                                  ToastUtil.showShortToast(
-                                    "Successfully Logged In",
-                                  );
+                                  if (!_isLoading) {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+
+                                    final result = await loginRxObj.loginRx(
+                                      email: _emailController.text.trim(),
+                                      password: _passwordController.text,
+                                    );
+
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
+
+                                    if (result != null) {
+                                      NavigationService.navigateToReplacement(
+                                        Routes.navbar,
+                                      );
+                                      ToastUtil.showShortToast(
+                                        result.message ??
+                                            "Successfully Logged In",
+                                      );
+                                    }
+                                  }
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -262,14 +278,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 elevation: 0,
                               ),
-                              child: const Text(
-                                'Log In',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : const Text(
+                                      'Log In',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                             ),
                           ),
 

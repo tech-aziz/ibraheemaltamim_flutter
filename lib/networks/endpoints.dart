@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names, unnecessary_string_interpolations
 
-const String url = "https://jungakishore.thesyndicates.team/api";
+const String url = "https://ibraheemaltamim.thesyndicates.team";
 const String imageUrl = "${url}";
 
 final class NetworkConstants {
@@ -19,20 +19,32 @@ final class Endpoints {
   Endpoints._();
 
   // -------------------Register start-------------------
-  static String register() => "/register";
+  static String register() => "/api/register";
   // -------------------Register end-------------------
 
+  // -------------------Register Verify email start-------------------
+  static String verifyEmail() => "/api/verify-email";
+  // -------------------Register Verify email end-------------------
+
+  // -------------------Resend OTP start-------------------
+  static String resendOtp() => "/api/resend-otp";
+  // -------------------Resend OTP end-------------------
+
   // -------------------Login start-------------------
-  static String login() => "/login";
+  static String login() => "/api/login";
   // -------------------Login end-------------------
+
+  // -------------------Forget Password start-------------------
+  static String forgetPassword() => "/api/forgot-password";
+  // -------------------Forget Password end-------------------
+
+  // -------------------Reset Password start-------------------
+  static String resetPassword() => "/api/reset-password";
+  // -------------------Reset Password end-------------------
 
   // -------------------Logout start-------------------
   static String logout() => "/logout";
   // -------------------Logout end-------------------
-
-  // -------------------Verify email start-------------------
-  static String verifyEmail() => "/verify-email";
-  // -------------------Verify email end-------------------
 
   // -------------------Verify phone start-------------------
   static String verifyphone() => "/login/verify-otp";
