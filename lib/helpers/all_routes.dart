@@ -4,6 +4,7 @@ import 'package:ibraheemaltamim_flutter/features/auth/login/presentation/login_s
 import 'package:ibraheemaltamim_flutter/features/auth/otp/presentation/register_otp_verification_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/register/presentation/register_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/set_new_password/presentation/set_new_password_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/otp/presentation/forget_password_otp_verification_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/all_opportunities_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/notification_screen.dart';
@@ -67,6 +68,9 @@ final class Routes {
   static const String termsAndConditionScreen = '/termsAndConditionScreen';
   // ---------- Privacy Screen ----------
   static const String privacyScreen = '/privacyScreen';
+  // ---------- Forget Password Otp Verification Screen ----------
+  static const String forgetPasswordOtpVerificationScreen =
+      '/forgetPasswordOtpVerificationScreen';
 }
 
 final class RouteGenerator {
@@ -105,6 +109,20 @@ final class RouteGenerator {
                     RegisterOtpVerificationScreen(email: args['email']),
               );
 
+      // ---------- Forget Password Otp Verification Screen ----------
+      case Routes.forgetPasswordOtpVerificationScreen:
+        final args = settings.arguments as Map;
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget:
+                    ForgetPasswordOtpVerificationScreen(email: args['email']),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) =>
+                    ForgetPasswordOtpVerificationScreen(email: args['email']),
+              );
+
       // ---------- Home Screen ----------
       case Routes.homeScreen:
         return Platform.isAndroid
@@ -115,12 +133,17 @@ final class RouteGenerator {
         final args = settings.arguments as Map;
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: SetNewPasswordScreen(email: args['email']),
+                widget: SetNewPasswordScreen(
+                  email: args['email'],
+                  token: args['token'],
+                ),
                 settings: settings,
               )
             : CupertinoPageRoute(
-                builder: (context) =>
-                    SetNewPasswordScreen(email: args['email']),
+                builder: (context) => SetNewPasswordScreen(
+                  email: args['email'],
+                  token: args['token'],
+                ),
               );
 
       // ---------- Navbar ----------

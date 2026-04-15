@@ -5,7 +5,6 @@ import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_icons.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
-import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
@@ -195,7 +194,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
                                     if (result) {
                                       NavigationService.navigateToWithArgs(
-                                        Routes.setNewPasswordScreen,
+                                        Routes.forgetPasswordOtpVerificationScreen,
                                         {"email": _emailController.text.trim()},
                                       );
                                     }

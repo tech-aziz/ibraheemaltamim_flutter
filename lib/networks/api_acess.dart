@@ -2,51 +2,75 @@ import 'package:ibraheemaltamim_flutter/features/auth/login/data/rx_login/rx.dar
 import 'package:ibraheemaltamim_flutter/features/auth/login/model/login_model.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/forget_password/data/rx_forget_password/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/forget_password/model/forget_password_model.dart';
-import 'package:ibraheemaltamim_flutter/features/auth/set_new_password/data/rx_reset_password/rx.dart';
-import 'package:ibraheemaltamim_flutter/features/auth/set_new_password/model/set_new_password_model.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/otp/data/rx_forget_password_verify_otp/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/otp/model/forget_password_otp_model.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/otp/model/register_resend_otp_model.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/register/data/rx_register/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/register/model/register_model.dart';
-import 'package:ibraheemaltamim_flutter/features/auth/otp/data/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/otp/data/rx_register_verify_otp/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/otp/model/verify_register_otp_model.dart';
-import 'package:ibraheemaltamim_flutter/features/auth/otp/data/rx_resend_otp/rx.dart';
-import 'package:ibraheemaltamim_flutter/features/auth/otp/model/resend_otp_model.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/otp/data/rx_register_resend_otp/rx.dart';
 import 'package:rxdart/subjects.dart';
 
+import 'package:ibraheemaltamim_flutter/features/auth/logout/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/set_new_password/data/rx_reset_password/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/set_new_password/model/set_new_password_model.dart';
+
+// ------------- Register Api Access -----------------//
 RegisterRx registerRxObj = RegisterRx(
   empty: RegisterModel(),
   dataFetcher: BehaviorSubject<RegisterModel>(),
 );
 
+// ------------- Verify Register Otp Api Access -----------------//
 VerifyRegisterOtpRx verifyRegisterOtpRxObj = VerifyRegisterOtpRx(
   empty: VerifyRegisterOtpModel(),
   dataFetcher: BehaviorSubject<VerifyRegisterOtpModel>(),
 );
 
-ResendOtpRx resendOtpRxObj = ResendOtpRx(
-  empty: ResendOtpModel(),
-  dataFetcher: BehaviorSubject<ResendOtpModel>(),
+// ------------- Resend Register Otp Api Access -----------------//
+ResendRegisterOtpRx resendRegisterOtpRxObj = ResendRegisterOtpRx(
+  empty: ResendRegisterOtpModel(),
+  dataFetcher: BehaviorSubject<ResendRegisterOtpModel>(),
 );
 
+// ------------- Login Api Access -----------------//
 LoginRx loginRxObj = LoginRx(
   empty: LoginModel(),
   dataFetcher: BehaviorSubject<LoginModel>(),
 );
 
+//___________________ Forget Password Api Access ______________________//
 ForgetPasswordRx forgetPasswordRxObj = ForgetPasswordRx(
   empty: ForgetPasswordModel(),
   dataFetcher: BehaviorSubject<ForgetPasswordModel>(),
 );
 
+
+// //_________________Reset Password Api Access ______________________//
+// ResetPasswordRx resetPasswordRxObj = ResetPasswordRx(
+//   empty: ResetPasswordModel(),
+//   dataFetcher: BehaviorSubject<ResetPasswordModel>(),
+// );
+
+
+// ------------- Forget Api Access -----------------//
+// ForgetPasswordRx forgetPasswordRxObj = ForgetPasswordRx(
+//   empty: ForgetPasswordModel(),
+//   dataFetcher: BehaviorSubject<ForgetPasswordModel>(),
+// );
+
+// ------------- Reset Password Api Access -----------------//
 ResetPasswordRx resetPasswordRxObj = ResetPasswordRx(
   empty: SetNewPasswordModel(),
   dataFetcher: BehaviorSubject<SetNewPasswordModel>(),
 );
 
-// //___________________ Forget Password Api Access ______________________//
-// ForgetPasswordRx forgetPasswordRxObj = ForgetPasswordRx(
-//   empty: ForgetPasswordModel(),
-//   dataFetcher: BehaviorSubject<ForgetPasswordModel>(),
-// );
+
+VerifyForgetPasswordOtpRx verifyForgetPasswordOtpRxObj = VerifyForgetPasswordOtpRx(
+  empty: ForgetPasswordOtpVerifyModel(),
+  dataFetcher: BehaviorSubject<ForgetPasswordOtpVerifyModel>(),
+);
 
 // //___________________ Verify Otp Api Access ______________________//
 
@@ -72,8 +96,8 @@ ResetPasswordRx resetPasswordRxObj = ResetPasswordRx(
 //   dataFetcher: BehaviorSubject<RegisterPropertyInfoModel>(),
 // );
 
-// //_________________LogOut Api Access ______________________//
-// LogOutRx logOutRx = LogOutRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
+//_________________LogOut Api Access ______________________//
+LogOutRx logOutRx = LogOutRx(empty: {}, dataFetcher: BehaviorSubject<Map>());
 
 // //_________________Login Api Access ______________________//
 // LoginRx loginRxObj = LoginRx(
@@ -81,11 +105,7 @@ ResetPasswordRx resetPasswordRxObj = ResetPasswordRx(
 //   dataFetcher: BehaviorSubject<LoginModel>(),
 // );
 
-// //_________________Reset Password Api Access ______________________//
-// ResetPasswordRx resetPasswordRxObj = ResetPasswordRx(
-//   empty: ResetPasswordModel(),
-//   dataFetcher: BehaviorSubject<ResetPasswordModel>(),
-// );
+
 
 // //_________________Resident Registration Api Access ______________________//
 // ResidentRegistrationRx residentRegistrationRxObj = ResidentRegistrationRx(

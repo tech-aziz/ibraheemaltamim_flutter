@@ -13,14 +13,14 @@ final class ResetPasswordApi {
 
   Future<SetNewPasswordModel> resetPasswordApi({
     required String email,
-    required String otp,
+    required String token,
     required String password,
     required String passwordConfirmation,
   }) async {
     try {
       Map<String, dynamic> formDataMap = {
         "email": email,
-        "otp": otp,
+        "token": token,
         "password": password,
         "password_confirmation": passwordConfirmation,
       };

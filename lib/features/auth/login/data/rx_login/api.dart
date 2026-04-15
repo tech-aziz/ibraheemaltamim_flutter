@@ -31,6 +31,10 @@ final class LoginApi {
         if (data.token != null) {
           appData.write(kKeyIsLoggedIn, true);
           appData.write(kKeyAccessToken, data.token);
+          if (data.data?.role != null) {
+            appData.write(kKeyUserRole, data.data!.role);
+          }
+          DioSingleton.instance.update(data.token!);
         }
         return data;
       } else {

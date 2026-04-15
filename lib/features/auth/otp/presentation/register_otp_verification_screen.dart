@@ -177,13 +177,21 @@ class _RegisterOtpVerificationScreenState
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () async {
                                       if (_remainingSeconds == 0) {
-                                        final result = await resendOtpRxObj.resendOtpRx(email: widget.email);
+                                        final result =
+                                            await resendRegisterOtpRxObj
+                                                .resendRegisterOtpRx(
+                                                  email: widget.email,
+                                                );
                                         if (result != null) {
                                           _startTimer();
-                                          ToastUtil.showShortToast("OTP sent successfully");
+                                          ToastUtil.showShortToast(
+                                            "OTP sent successfully",
+                                          );
                                         }
                                       } else {
-                                        ToastUtil.showShortToast("Please wait for the timer to finish before resending");
+                                        ToastUtil.showShortToast(
+                                          "Please wait for the timer to finish before resending",
+                                        );
                                       }
                                     },
                                 ),
@@ -208,7 +216,10 @@ class _RegisterOtpVerificationScreenState
                           onPressed: () async {
                             if (!_isLoading) {
                               if (_remainingSeconds == 0) {
-                                ToastUtil.showShortToast('OTP has expired. Please request a new one'.tr);
+                                ToastUtil.showShortToast(
+                                  'OTP has expired. Please request a new one'
+                                      .tr,
+                                );
                                 return;
                               }
                               if (otpController.text.length != 4) {
@@ -223,10 +234,11 @@ class _RegisterOtpVerificationScreenState
                               });
 
                               try {
-                                final result = await verifyRegisterOtpRxObj.verifyRegisterOtpRx(
-                                  email: widget.email,
-                                  otp: otpController.text,
-                                );
+                                final result = await verifyRegisterOtpRxObj
+                                    .verifyRegisterOtpRx(
+                                      email: widget.email,
+                                      otp: otpController.text,
+                                    );
 
                                 if (result != null) {
                                   NavigationService.navigateToReplacement(

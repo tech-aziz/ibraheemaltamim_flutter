@@ -1,32 +1,32 @@
 import 'dart:convert';
 
-class ResendOtpModel {
+class ResendRegisterOtpModel {
     bool? status;
     String? message;
     int? code;
 
-    ResendOtpModel({
+    ResendRegisterOtpModel({
         this.status,
         this.message,
         this.code,
     });
 
-    ResendOtpModel copyWith({
+    ResendRegisterOtpModel copyWith({
         bool? status,
         String? message,
         int? code,
     }) => 
-        ResendOtpModel(
+        ResendRegisterOtpModel(
             status: status ?? this.status,
             message: message ?? this.message,
             code: code ?? this.code,
         );
 
-    factory ResendOtpModel.fromRawJson(String str) => ResendOtpModel.fromJson(json.decode(str));
+    factory ResendRegisterOtpModel.fromRawJson(String str) => ResendRegisterOtpModel.fromJson(json.decode(str));
 
     String toRawJson() => json.encode(toJson());
 
-    factory ResendOtpModel.fromJson(Map<String, dynamic> json) => ResendOtpModel(
+    factory ResendRegisterOtpModel.fromJson(Map<String, dynamic> json) => ResendRegisterOtpModel(
         status: json["status"],
         message: json["message"],
         code: json["code"],

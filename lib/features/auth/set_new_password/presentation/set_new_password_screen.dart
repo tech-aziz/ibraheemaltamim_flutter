@@ -7,7 +7,12 @@ import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 
 class SetNewPasswordScreen extends StatefulWidget {
   final String email;
-  const SetNewPasswordScreen({super.key, required this.email});
+  final String token;
+  const SetNewPasswordScreen({
+    super.key,
+    required this.email,
+    required this.token,
+  });
 
   @override
   State<SetNewPasswordScreen> createState() => _SetNewPasswordScreenState();
@@ -15,7 +20,6 @@ class SetNewPasswordScreen extends StatefulWidget {
 
 class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
   // ------------ Variables start------------
-  final TextEditingController _otpController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -29,18 +33,11 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
 
   @override
   void dispose() {
-    _otpController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  String? _otpValidator(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "OTP is required";
-    }
-    return null;
-  }
 
   String? _passwordValidator(String? value) {
     if (value == null || value.trim().isEmpty) {
@@ -97,51 +94,6 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
 
                           const SizedBox(height: 48),
 
-                          // ------------ OTP field start------------
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Verification Code',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF14304A),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              TextFormField(
-                                validator: _otpValidator,
-                                controller: _otpController,
-                                cursorRadius: const Radius.circular(12),
-                                cursorColor: AppColor.textColor,
-                                decoration: InputDecoration(
-                                  hintText: 'Enter 4-digit code',
-                                  hintStyle: TextStyle(
-                                    color: AppColor.hintColor.withOpacity(0.5),
-                                    fontSize: 14,
-                                  ),
-                                  fillColor: const Color(0xFFCAF0F8),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color:
-                                          AppColor.hintColor.withOpacity(.06),
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color:
-                                          AppColor.textColor.withOpacity(0.2),
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-
                           // ------------ Password field start------------
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,15 +124,17 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
                                   fillColor: const Color(0xFFCAF0F8),
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color:
-                                          AppColor.hintColor.withOpacity(.06),
+                                      color: AppColor.hintColor.withOpacity(
+                                        .06,
+                                      ),
                                       width: 2.0,
                                     ),
                                   ),
                                   focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color:
-                                          AppColor.textColor.withOpacity(0.2),
+                                      color: AppColor.textColor.withOpacity(
+                                        0.2,
+                                      ),
                                       width: 2.0,
                                     ),
                                   ),
@@ -235,15 +189,17 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
                                   fillColor: const Color(0xFFCAF0F8),
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color:
-                                          AppColor.hintColor.withOpacity(.06),
+                                      color: AppColor.hintColor.withOpacity(
+                                        .06,
+                                      ),
                                       width: 2.0,
                                     ),
                                   ),
                                   focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
-                                      color:
-                                          AppColor.textColor.withOpacity(0.2),
+                                      color: AppColor.textColor.withOpacity(
+                                        0.2,
+                                      ),
                                       width: 2.0,
                                     ),
                                   ),
@@ -280,14 +236,14 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
                                       _isLoading = true;
                                     });
 
-                                    final result =
-                                        await resetPasswordRxObj.resetPasswordRx(
-                                      email: widget.email,
-                                      otp: _otpController.text.trim(),
-                                      password: _passwordController.text,
-                                      passwordConfirmation:
-                                          _confirmPasswordController.text,
-                                    );
+                                    final result = await resetPasswordRxObj
+                                        .resetPasswordRx(
+                                          email: widget.email,
+                                          token: widget.token,
+                                          password: _passwordController.text,
+                                          passwordConfirmation:
+                                              _confirmPasswordController.text,
+                                        );
 
                                     setState(() {
                                       _isLoading = false;

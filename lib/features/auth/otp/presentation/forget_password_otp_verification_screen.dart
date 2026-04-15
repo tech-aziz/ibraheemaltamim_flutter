@@ -1,0 +1,278 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
+import 'package:ibraheemaltamim_flutter/assets_helper/app_fonts.dart';
+import 'package:ibraheemaltamim_flutter/common_widgets/custom_button.dart';
+import 'package:ibraheemaltamim_flutter/common_widgets/custom_text_widget.dart';
+import 'dart:async';
+import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
+import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
+import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
+
+class ForgetPasswordOtpVerificationScreen extends StatefulWidget {
+  final String email;
+  const ForgetPasswordOtpVerificationScreen({super.key, required this.email});
+
+  @override
+  State<ForgetPasswordOtpVerificationScreen> createState() =>
+      _ForgetPasswordOtpVerificationScreenState();
+}
+
+class _ForgetPasswordOtpVerificationScreenState
+    extends State<ForgetPasswordOtpVerificationScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController otpController = TextEditingController();
+  bool _isLoading = false;
+  Timer? _timer;
+  int _remainingSeconds = 60;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _remainingSeconds = 60;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
+        setState(() {
+          _remainingSeconds--;
+        });
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  String get _formattedTime {
+    int min = _remainingSeconds ~/ 60;
+    int sec = _remainingSeconds % 60;
+    return '$min:${sec.toString().padLeft(2, '0')} min';
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    otpController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColor.bgColor,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        UIHelper.verticalSpace(110.h),
+
+                        customTextWidget(
+                          name: 'Verify OTP'.tr,
+                          alignment: Alignment.center,
+
+                          style: TextFontStyle.textStyle13PoppinsW500.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: AppColor.textColor,
+                            fontSize: 28.sp,
+                            height: 1.2,
+                          ),
+                        ),
+                        UIHelper.verticalSpace(8.h),
+                        Text(
+                          textAlign: TextAlign.center,
+                          // "An authentication code has been sent to \n +88${widget.phoneNumber}",
+                          "Please enter the code we sent you\n to email " +
+                              widget.email,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: AppColor.textColor1,
+                          ),
+                        ),
+                        UIHelper.verticalSpace(40.h),
+                        OtpTextField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          numberOfFields: 4,
+                          focusedBorderColor: AppColor.c333334,
+                          showFieldAsBox: true,
+                          fillColor: AppColor.bgColor,
+                          cursorColor: AppColor.c333334,
+                          filled: true,
+                          enabledBorderColor: AppColor.textColor,
+                          borderRadius: BorderRadius.circular(4.r),
+                          margin: EdgeInsets.symmetric(horizontal: 15.w),
+                          fieldHeight: 54.h,
+                          fieldWidth: 54.w,
+                          contentPadding: EdgeInsets.zero,
+                          textStyle: TextFontStyle.textStyle13PoppinsW500
+                              .copyWith(
+                                fontSize: 16.sp,
+                                color: AppColor.c797A7C,
+                                fontWeight: FontWeight.w500,
+                              ),
+                          // Centers the text inside each OTP field
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          onCodeChanged: (String code) {},
+                          onSubmit: (String verificationCode) {
+                            if (verificationCode.length == 4) {
+                              otpController.text = verificationCode;
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "Please enter a valid 4-digit OTP".tr,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        UIHelper.verticalSpace(15.h),
+                        Center(
+                          child: Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: 'Didn\'t receive OTP ?'.tr,
+                                  style: TextFontStyle.textStyle13PoppinsW500
+                                      .copyWith(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12.sp,
+                                        color: AppColor.c323232.withOpacity(
+                                          0.5,
+                                        ),
+
+                                        letterSpacing: 0.25.sp,
+                                      ),
+                                ),
+                                TextSpan(
+                                  text: ' Resend Code'.tr,
+                                  style: TextFontStyle.textStyle13PoppinsW500
+                                      .copyWith(
+                                        color: AppColor.textColor,
+                                        height: 1.2,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12.sp,
+                                      ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () async {
+                                      if (_remainingSeconds == 0) {
+                                        final result = await forgetPasswordRxObj
+                                            .forgetPasswordRx(
+                                          email: widget.email,
+                                        );
+                                        if (result) {
+                                          _startTimer();
+                                          ToastUtil.showShortToast(
+                                            "OTP sent successfully",
+                                          );
+                                        }
+                                      } else {
+                                        ToastUtil.showShortToast(
+                                          "Please wait for the timer to finish before resending",
+                                        );
+                                      }
+                                    },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        UIHelper.verticalSpace(15.h),
+                        Text(
+                          _formattedTime,
+                          style: TextFontStyle.textStyle13PoppinsW500.copyWith(
+                            color: AppColor.textColor,
+                            height: 1.2,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                        UIHelper.verticalSpace(40.h),
+                        CustomButton(
+                          text: 'Verify'.tr,
+                          backgroundColor: AppColor.textColor,
+                          onPressed: () async {
+                            if (!_isLoading) {
+                              if (_remainingSeconds == 0) {
+                                ToastUtil.showShortToast(
+                                  'OTP has expired. Please request a new one'
+                                      .tr,
+                                );
+                                return;
+                              }
+                              if (otpController.text.length != 4) {
+                                ToastUtil.showShortToast(
+                                  'Please enter a valid 4-digit OTP'.tr,
+                                );
+                                return;
+                              }
+
+                              setState(() {
+                                _isLoading = true;
+                              });
+
+                              try {
+                                final result =
+                                    await verifyForgetPasswordOtpRxObj
+                                        .verifyForgetPasswordOtpRx(
+                                  email: widget.email,
+                                  otp: otpController.text,
+                                );
+
+                                if (result != null) {
+                                  NavigationService.navigateToReplacementWithObject(
+                                    Routes.setNewPasswordScreen,
+                                    {
+                                      "email": widget.email,
+                                      "token": result.token,
+                                    },
+                                  );
+                                  ToastUtil.showShortToast(
+                                    "OTP verified successfully.",
+                                  );
+                                }
+                              } catch (e) {
+                                // errors are handled within rx.dart already
+                              } finally {
+                                if (mounted) {
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                }
+                              }
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

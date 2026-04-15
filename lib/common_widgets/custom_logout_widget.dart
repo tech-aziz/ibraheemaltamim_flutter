@@ -3,13 +3,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_fonts.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_buttons.dart';
+import 'package:ibraheemaltamim_flutter/constants/app_constants.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
+import 'package:ibraheemaltamim_flutter/helpers/di.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
-import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
+import 'package:ibraheemaltamim_flutter/networks/dio/dio.dart';
+import 'package:ibraheemaltamim_flutter/networks/stream_cleaner.dart';
 
-class CustomLogoutWidget extends StatelessWidget {
+class CustomLogoutWidget extends StatefulWidget {
   CustomLogoutWidget({super.key});
+
+  @override
+  State<CustomLogoutWidget> createState() => _CustomLogoutWidgetState();
+}
+
+class _CustomLogoutWidgetState extends State<CustomLogoutWidget> {
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -85,15 +96,27 @@ class CustomLogoutWidget extends StatelessWidget {
                   child: CustomButtons(
                     name: 'Yes, Log out',
                     bgColor: AppColor.textColor,
+                    isLoading: _isLoading,
                     callback: () async {
-                      // await totalDataClean();
-                      // appData.remove(kKeyAccessToken);
-                      // appData.remove(kKeyUserRole);
-                      // DioSingleton.instance.update('');
-                      NavigationService.navigateToUntilReplacement(
-                        Routes.loginScreen,
-                      );
-                      ToastUtil.showShortToast("Signed out Successfully");
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      try {
+                        await logOutRx.logout();
+                        await totalDataClean();
+                        appData.remove(kKeyAccessToken);
+                        appData.remove(kKeyUserRole);
+                        DioSingleton.instance.update('');
+                        NavigationService.navigateToUntilReplacement(
+                          Routes.loginScreen,
+                        );
+                      } finally {
+                        if (mounted) {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      }
                     },
                     textStyle: TextFontStyle.textStyle13PoppinsW500.copyWith(
                       fontSize: 16.sp,

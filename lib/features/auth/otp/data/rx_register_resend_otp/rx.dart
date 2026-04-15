@@ -1,23 +1,23 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/otp/model/register_resend_otp_model.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:ibraheemaltamim_flutter/features/auth/otp/model/resend_otp_model.dart';
 import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 import 'package:ibraheemaltamim_flutter/networks/rx_base.dart';
 import 'api.dart';
 
-final class ResendOtpRx extends RxResponseInt<ResendOtpModel> {
-  final api = ResendOtpApi.instance;
+final class ResendRegisterOtpRx extends RxResponseInt<ResendRegisterOtpModel> {
+  final api = RegisterResendOtpApi.instance;
 
-  ResendOtpRx({required super.empty, required super.dataFetcher});
+  ResendRegisterOtpRx({required super.empty, required super.dataFetcher});
 
   ValueStream get getFileData => dataFetcher.stream;
 
-  Future<ResendOtpModel?> resendOtpRx({
+  Future<ResendRegisterOtpModel?> resendRegisterOtpRx({
     required String email,
   }) async {
     try {
-      final data = await api.resendOtpApi(email: email);
+      final data = await api.resendRegisterOtpApi(email: email);
       handleSuccessWithReturn(data);
       return data;
     } catch (error) {

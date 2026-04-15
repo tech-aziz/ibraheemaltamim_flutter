@@ -15,14 +15,14 @@ final class ResetPasswordRx extends RxResponseInt<SetNewPasswordModel> {
 
   Future<bool> resetPasswordRx({
     required String email,
-    required String otp,
+    required String token,
     required String password,
     required String passwordConfirmation,
   }) async {
     try {
       final data = await api.resetPasswordApi(
         email: email,
-        otp: otp,
+        token: token,
         password: password,
         passwordConfirmation: passwordConfirmation,
       );
