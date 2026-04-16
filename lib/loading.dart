@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/login/presentation/login_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/navbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/helper_methods.dart';
 import 'package:ibraheemaltamim_flutter/onboarding_screen.dart';
+import 'package:ibraheemaltamim_flutter/constants/app_constants.dart';
+import 'package:ibraheemaltamim_flutter/helpers/di.dart';
 
 final class Loading extends StatefulWidget {
   const Loading({super.key});
@@ -33,7 +37,12 @@ class _LoadingState extends State<Loading> {
     if (_isLoading) {
       return const SplashScreen();
     } else {
-      return const LoginScreen();
+      bool isLoggedIn = appData.read(kKeyIsLoggedIn) ?? false;
+      if (isLoggedIn) {
+        return const Navbar();
+      } else {
+        return const LoginScreen();
+      }
     }
   }
 }

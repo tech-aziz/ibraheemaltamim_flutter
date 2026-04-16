@@ -5,6 +5,7 @@ import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
+import 'package:ibraheemaltamim_flutter/helpers/helper_methods.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -58,309 +59,321 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.bgColor,
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 60),
-                          Text(
-                            'Log In',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 20,
-                              color: AppColor.textColor,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Hi! Welcome',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 22,
-                              color: AppColor.textColor1,
-                            ),
-                          ),
-                          const SizedBox(height: 48),
-
-                          // ------------ Email Address field start------------
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Email Address',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF14304A),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              TextFormField(
-                                validator: _emailValidator,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                cursorRadius: const Radius.circular(12),
-                                cursorColor: AppColor.textColor,
-                                controller: _emailController,
-                                decoration: InputDecoration(
-                                  hintText: 'Enter Your Email',
-                                  hintStyle: TextStyle(
-                                    color: AppColor.hintColor.withOpacity(0.5),
-                                    fontSize: 14,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColor.hintColor.withOpacity(
-                                        .06,
-                                      ),
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColor.textColor.withOpacity(
-                                        0.2,
-                                      ),
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  errorBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  focusedErrorBorder:
-                                      const UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  fillColor: const Color(0xFFCAF0F8),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          // ------------ Email Address field end ------------
-                          const SizedBox(height: 20),
-
-                          // ------------ Password field start------------
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Password',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF14304A),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              TextFormField(
-                                validator: _passwordValidator,
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                controller: _passwordController,
-                                obscureText: _obscurePassword,
-                                cursorRadius: const Radius.circular(12),
-                                cursorColor: AppColor.textColor,
-                                decoration: InputDecoration(
-                                  hintText: 'Enter Your Password',
-                                  hintStyle: TextStyle(
-                                    color: AppColor.hintColor.withOpacity(0.5),
-                                    fontSize: 14,
-                                  ),
-                                  fillColor: const Color(0xFFCAF0F8),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColor.hintColor.withOpacity(
-                                        .06,
-                                      ),
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColor.textColor.withOpacity(
-                                        0.2,
-                                      ),
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  errorBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  focusedErrorBorder:
-                                      const UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.red,
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _obscurePassword
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
-                                      color: Colors.grey[600],
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _obscurePassword = !_obscurePassword;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          // ------------ Password field end------------
-                          const SizedBox(height: 32),
-
-                          // ------------ Login button start------------
-                          SizedBox(
-                            width: double.infinity,
-                            height: 56,
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                FocusScope.of(context).unfocus();
-                                if (_formKey.currentState!.validate()) {
-                                  if (!_isLoading) {
-                                    setState(() {
-                                      _isLoading = true;
-                                    });
-
-                                    final result = await loginRxObj.loginRx(
-                                      email: _emailController.text.trim(),
-                                      password: _passwordController.text,
-                                    );
-
-                                    setState(() {
-                                      _isLoading = false;
-                                    });
-
-                                    if (result != null) {
-                                      NavigationService.navigateToReplacement(
-                                        Routes.navbar,
-                                      );
-                                      ToastUtil.showShortToast(
-                                        result.message ??
-                                            "Successfully Logged In",
-                                      );
-                                    }
-                                  }
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColor.buttonColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(32),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: _isLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white,
-                                    )
-                                  : const Text(
-                                      'Log In',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                            ),
-                          ),
-
-                          // ------------ Login button end------------
-                          const SizedBox(height: 20),
-
-                          // ------------ Forget password start------------
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ForgetPasswordScreen(),
-                                ),
-                              );
-                            },
-                            child: const Text(
-                              'Forgotten your password ?',
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+        if (didPop) return;
+        showMaterialDialog(context);
+      },
+      child: Scaffold(
+        backgroundColor: AppColor.bgColor,
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 60),
+                            Text(
+                              'Log In',
                               style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF0A1F44),
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                                color: AppColor.textColor,
                               ),
                             ),
-                          ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Hi! Welcome',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 22,
+                                color: AppColor.textColor1,
+                              ),
+                            ),
+                            const SizedBox(height: 48),
 
-                          // ------------ Forget password end------------
-                          const Spacer(),
-
-                          // ------------ Create account start------------
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 32),
-                            child: Column(
+                            // ------------ Email Address field start------------
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Don't have an account ?",
+                                  'Email Address',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(0xFF1A1A1A),
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF14304A),
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                TextButton(
-                                  onPressed: () {
-                                    NavigationService.navigateTo(
-                                      Routes.registerScreen,
-                                    );
-                                  },
-                                  child: Text(
-                                    'Create an Account',
-                                    style: TextStyle(
+                                const SizedBox(height: 8),
+                                TextFormField(
+                                  validator: _emailValidator,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  cursorRadius: const Radius.circular(12),
+                                  cursorColor: AppColor.textColor,
+                                  controller: _emailController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter Your Email',
+                                    hintStyle: TextStyle(
+                                      color: AppColor.hintColor.withOpacity(
+                                        0.5,
+                                      ),
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColor.textColor,
+                                    ),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: AppColor.hintColor.withOpacity(
+                                          .06,
+                                        ),
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: AppColor.textColor.withOpacity(
+                                          0.2,
+                                        ),
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                    errorBorder: const UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.red,
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                    focusedErrorBorder:
+                                        const UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.red,
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                    fillColor: const Color(0xFFCAF0F8),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            // ------------ Email Address field end ------------
+                            const SizedBox(height: 20),
+
+                            // ------------ Password field start------------
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Password',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF14304A),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                TextFormField(
+                                  validator: _passwordValidator,
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  controller: _passwordController,
+                                  obscureText: _obscurePassword,
+                                  cursorRadius: const Radius.circular(12),
+                                  cursorColor: AppColor.textColor,
+                                  decoration: InputDecoration(
+                                    hintText: 'Enter Your Password',
+                                    hintStyle: TextStyle(
+                                      color: AppColor.hintColor.withOpacity(
+                                        0.5,
+                                      ),
+                                      fontSize: 14,
+                                    ),
+                                    fillColor: const Color(0xFFCAF0F8),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: AppColor.hintColor.withOpacity(
+                                          .06,
+                                        ),
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: AppColor.textColor.withOpacity(
+                                          0.2,
+                                        ),
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                    errorBorder: const UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.red,
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                    focusedErrorBorder:
+                                        const UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Colors.red,
+                                            width: 2.0,
+                                          ),
+                                        ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword
+                                            ? Icons.visibility_outlined
+                                            : Icons.visibility_off_outlined,
+                                        color: Colors.grey[600],
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscurePassword = !_obscurePassword;
+                                        });
+                                      },
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                          // ------------ Create account end------------
-                        ],
+
+                            // ------------ Password field end------------
+                            const SizedBox(height: 32),
+
+                            // ------------ Login button start------------
+                            SizedBox(
+                              width: double.infinity,
+                              height: 56,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  FocusScope.of(context).unfocus();
+                                  if (_formKey.currentState!.validate()) {
+                                    if (!_isLoading) {
+                                      setState(() {
+                                        _isLoading = true;
+                                      });
+
+                                      final result = await loginRxObj.loginRx(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text,
+                                      );
+
+                                      setState(() {
+                                        _isLoading = false;
+                                      });
+
+                                      if (result != null) {
+                                        NavigationService.navigateToReplacement(
+                                          Routes.navbar,
+                                        );
+                                        ToastUtil.showShortToast(
+                                          result.message ??
+                                              "Successfully Logged In",
+                                        );
+                                      }
+                                    }
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColor.buttonColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(32),
+                                  ),
+                                  elevation: 0,
+                                ),
+                                child: _isLoading
+                                    ? const CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                    : const Text(
+                                        'Log In',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                              ),
+                            ),
+
+                            // ------------ Login button end------------
+                            const SizedBox(height: 20),
+
+                            // ------------ Forget password start------------
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ForgetPasswordScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                'Forgotten your password ?',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF0A1F44),
+                                ),
+                              ),
+                            ),
+
+                            // ------------ Forget password end------------
+                            const Spacer(),
+
+                            // ------------ Create account start------------
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 32),
+                              child: Column(
+                                children: [
+                                  const Text(
+                                    "Don't have an account ?",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xFF1A1A1A),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  TextButton(
+                                    onPressed: () {
+                                      NavigationService.navigateTo(
+                                        Routes.registerScreen,
+                                      );
+                                    },
+                                    child: Text(
+                                      'Create an Account',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColor.textColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // ------------ Create account end------------
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

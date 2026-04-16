@@ -4,7 +4,6 @@ import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
-import 'package:intl/intl.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -237,7 +236,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                   ),
                 ),
-                const SizedBox(height: 60),
+                const SizedBox(height: 16),
+                
+                // Terms & Privacy Policy row
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: [
+                    Text(
+                      'By creating an account, you agree to our ',
+                      style: TextStyle(
+                        color: Colors.blueGrey.shade400,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        NavigationService.navigateTo(Routes.termsAndConditionScreen);
+                      },
+                      child: Text(
+                        'Terms & Conditions',
+                        style: TextStyle(
+                          color: AppColor.darkNavy,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      ' and ',
+                      style: TextStyle(
+                        color: Colors.blueGrey.shade400,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        NavigationService.navigateTo(Routes.privacyScreen);
+                      },
+                      child: Text(
+                        'Privacy Policy',
+                        style: TextStyle(
+                          color: AppColor.darkNavy,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 40),
 
                 // Log In row
                 Row(

@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '/helpers/di.dart';
-
 import '../../constants/app_constants.dart';
-
 import '../endpoints.dart';
 import 'log.dart';
 

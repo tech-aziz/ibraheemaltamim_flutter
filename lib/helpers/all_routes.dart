@@ -18,6 +18,7 @@ import 'package:ibraheemaltamim_flutter/features/profile/presentation/mentor_pro
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/privacy_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/profile_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/terms_and_condition_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/presentation/change_password_screen.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
@@ -71,6 +72,8 @@ final class Routes {
   // ---------- Forget Password Otp Verification Screen ----------
   static const String forgetPasswordOtpVerificationScreen =
       '/forgetPasswordOtpVerificationScreen';
+  // ---------- Change Password Screen ----------
+  static const String changePasswordScreen = '/changePasswordScreen';
 }
 
 final class RouteGenerator {
@@ -262,6 +265,17 @@ final class RouteGenerator {
         return Platform.isAndroid
             ? _FadedTransitionRoute(widget: PrivacyScreen(), settings: settings)
             : CupertinoPageRoute(builder: (context) => PrivacyScreen());
+
+      // ---------- Change Password Screen ----------
+      case Routes.changePasswordScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const ChangePasswordScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const ChangePasswordScreen(),
+              );
       default:
         return null;
     }

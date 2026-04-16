@@ -51,15 +51,33 @@ final class Endpoints {
   // -------------------Verify Otp start-------------------
   static String verifyForgetPasswordOtp() => "/api/verify-otp";
   // -------------------Verify Otp end-------------------
+  
+  // -------------------Update Profile start-------------------
+  static String updateProfile() => "/api/update-profile";
+  // -------------------Update Profile end-------------------
+  
+
+  // -------------------Get Profile start-------------------
+  static String getProfile() => "/api/me";
+  // -------------------Get Profile end-------------------
+
+  // -------------------Delete Account start-------------------
+  static String deleteAccount() => "/api/delete-profile";
+  // -------------------Delete Account end-------------------
 
 
+  // -------------------Update Password start-------------------
+  static String updatePassword() => "/api/update-password";
+  // -------------------Update Password end-------------------
 
 
+  // -------------------Privacy Policy start-------------------
+  static String privacyPolicy() => "/api/dynamic-pages/single/privacy-policy";
+  // -------------------Privacy Policy end-------------------
 
-
-
-
-
+  // -------------------Terms And Conditions start-------------------
+  static String termsAndConditions() => "/api/dynamic-pages/single/terms-and-conditions";
+  // -------------------Terms And Conditions end-------------------
 
 
 

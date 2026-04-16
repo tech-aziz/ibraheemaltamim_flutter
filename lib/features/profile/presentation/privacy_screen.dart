@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
-import 'package:ibraheemaltamim_flutter/assets_helper/app_fonts.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/model/privacy_policy_model.dart';
+import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
+import 'package:shimmer/shimmer.dart';
 
-class PrivacyScreen extends StatelessWidget {
+class PrivacyScreen extends StatefulWidget {
   const PrivacyScreen({super.key});
+
+  @override
+  State<PrivacyScreen> createState() => _PrivacyScreenState();
+}
+
+class _PrivacyScreenState extends State<PrivacyScreen> {
+  @override
+  void initState() {
+    super.initState();
+    privacyPolicyRxObj.fetchPrivacyPolicy();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,33 +31,115 @@ class PrivacyScreen extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 20.h),
-            CustomAppbar(title: 'Privacy Policy'),
+            CustomAppbar(
+              title: 'Privacy Policy',
+              onTap: () => NavigationService.goBack(),
+            ),
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    UIHelper.verticalSpace(24.h),
-                    _buildSection(
-                      '1. Data Collection',
-                      'We collect personal information that you provide to us directly, such as your name and email address, when you register for an account.',
+              child: StreamBuilder<PrivacyPolicyModel>(
+                stream: privacyPolicyRxObj.privacyPolicyStream,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      !snapshot.hasData) {
+                    return _buildShimmer();
+                  }
+
+                  if (snapshot.hasError && !snapshot.hasData) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.error_outline_rounded,
+                            size: 48.sp,
+                            color: AppColor.textColor.withOpacity(0.4),
+                          ),
+                          SizedBox(height: 12.h),
+                          Text(
+                            'Failed to load Privacy Policy',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: AppColor.textColor.withOpacity(0.6),
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                          TextButton(
+                            onPressed: () =>
+                                privacyPolicyRxObj.fetchPrivacyPolicy(),
+                            child: Text(
+                              'Try Again',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: AppColor.textColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  final model = snapshot.data;
+                  final content = model?.data?.pageContent ?? '';
+
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        UIHelper.verticalSpace(8.h),
+                        Html(
+                          data: content,
+                          style: {
+                            'body': Style(
+                              margin: Margins.zero,
+                              padding: HtmlPaddings.symmetric(
+                                horizontal: 16,
+                                vertical: 4,
+                              ),
+                              fontSize: FontSize(14.sp),
+                              lineHeight: LineHeight(1.7),
+                              color: AppColor.textColor.withOpacity(0.8),
+                            ),
+                            'h1': Style(
+                              fontSize: FontSize(20.sp),
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.textColor,
+                              margin: Margins.only(top: 16, bottom: 8),
+                            ),
+                            'h2': Style(
+                              fontSize: FontSize(18.sp),
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.textColor,
+                              margin: Margins.only(top: 14, bottom: 6),
+                            ),
+                            'h3': Style(
+                              fontSize: FontSize(16.sp),
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.textColor,
+                              margin: Margins.only(top: 12, bottom: 4),
+                            ),
+                            'p': Style(
+                              margin: Margins.only(bottom: 12),
+                            ),
+                            'li': Style(
+                              margin: Margins.only(bottom: 6),
+                            ),
+                            'strong': Style(
+                              fontWeight: FontWeight.bold,
+                              color: AppColor.textColor,
+                            ),
+                            'a': Style(
+                              color: Colors.blue,
+                              textDecoration: TextDecoration.underline,
+                            ),
+                          },
+                        ),
+                        UIHelper.verticalSpace(40.h),
+                      ],
                     ),
-                    _buildSection(
-                      '2. Use of Information',
-                      'The information we collect is used to provide and improve our services, communicate with you, and personalize your experience.',
-                    ),
-                    _buildSection(
-                      '3. Data Protection',
-                      'We implement industry-standard security measures to protect your personal data from unauthorized access, disclosure, or destruction.',
-                    ),
-                    _buildSection(
-                      '4. Third-Party Services',
-                      'We do not sell your personal information to third parties. We may use third-party service providers to help us operate our platform.',
-                    ),
-                    UIHelper.verticalSpace(40.h),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],
@@ -51,29 +148,54 @@ class PrivacyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(String title, String content) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-            color: AppColor.textColor,
-          ),
+  Widget _buildShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 24.h,
+              width: 180.w,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6.r),
+              ),
+            ),
+            SizedBox(height: 20.h),
+            ...List.generate(12, (index) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 10.h),
+                child: Container(
+                  height: 14.h,
+                  width: index % 4 == 3 ? 200.w : double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+              );
+            }),
+            SizedBox(height: 20.h),
+            ...List.generate(10, (index) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 10.h),
+                child: Container(
+                  height: 14.h,
+                  width: index % 3 == 2 ? 160.w : double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
+                ),
+              );
+            }),
+          ],
         ),
-        UIHelper.verticalSpace(8.h),
-        Text(
-          content,
-          style: TextFontStyle.textStyle14InterW400.copyWith(
-            fontSize: 14.sp,
-            color: AppColor.textColor.withOpacity(0.7),
-            height: 1.5,
-          ),
-        ),
-        UIHelper.verticalSpace(24.h),
-      ],
+      ),
     );
   }
 }

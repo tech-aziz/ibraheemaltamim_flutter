@@ -11,6 +11,7 @@ import 'package:ibraheemaltamim_flutter/assets_helper/app_fonts.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/custom_button.dart';
 import '/helpers/di.dart';
 import '../constants/app_constants.dart';
+import '../networks/dio/dio.dart';
 
 //final appData = locator.get<GetStorage>();
 // final plcaeMarkAddress = locator.get<PlcaeMarkAddress>();
@@ -120,14 +121,11 @@ Future<void> setInitValue() async {
   appData.writeIfNull(kKeyfirstTime, true);
   await appData.writeIfNull(kKeyIsLoggedIn, false);
   await appData.writeIfNull(kKeyIsExploring, false);
-  // this is a temporary token. which should be removed
-
-  // DioSingleton.instance.update(
-  //     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL21vbGxpZS5taW5kYm9zc2NvYWNoaW5nLmNvbS9hcGkvbG9naW4iLCJpYXQiOjE3MjM0MzMwMTQsImV4cCI6MTcyNDAzNzgxNCwibmJmIjoxNzIzNDMzMDE0LCJqdGkiOiJQUlVxOHFoN2JnR0hyUEwyIiwic3ViIjoiMTYiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.SDEYU_UyYKWdDRW1NHQbbbmEgqAM64HE-b4_PVbSLoM");
-  //lisbon
-  // appData.writeIfNull(kKeySelectedLat, 38.74631383626653);
-  // appData.writeIfNull(kKeySelectedLng, -9.130169921874991);
-  //codemen
+  // Fetch token and update Dio if logged in
+  String? token = appData.read(kKeyAccessToken);
+  if (token != null && token.isNotEmpty) {
+    DioSingleton.instance.update(token);
+  }
 
   // var deviceInfo = DeviceInfoPlugin();
   // if (Platform.isIOS) {

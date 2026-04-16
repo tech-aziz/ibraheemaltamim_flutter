@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:ibraheemaltamim_flutter/helpers/helper_methods.dart';
 import 'package:ibraheemaltamim_flutter/loading.dart';
 import 'package:provider/provider.dart';
 import '/helpers/all_routes.dart';
@@ -46,17 +45,10 @@ class MyApp extends StatelessWidget {
       providers: providers,
       child: AnimateIfVisibleWrapper(
         showItemInterval: const Duration(milliseconds: 150),
-        child: PopScope(
-          canPop: false,
-          // ignore: deprecated_member_use
-          onPopInvoked: (bool didPop) async {
-            //showMaterialDialog(context);
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return const UtillScreenMobile();
           },
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return const UtillScreenMobile();
-            },
-          ),
         ),
       ),
     );
@@ -75,27 +67,20 @@ class UtillScreenMobile extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
-        return PopScope(
-          canPop: false,
-          // ignore: deprecated_member_use
-          onPopInvoked: (bool didPop) async {
-            showMaterialDialog(context);
-          },
-          child: GetMaterialApp(
-            showPerformanceOverlay: false,
-            theme: ThemeData(
-              scaffoldBackgroundColor: Colors.white,
-              useMaterial3: false,
-            ),
-            debugShowCheckedModeBanner: false,
-            translations: LocalString(),
-            builder: (context, widget) {
-              return MediaQuery(data: MediaQuery.of(context), child: widget!);
-            },
-            navigatorKey: NavigationService.navigatorKey,
-            onGenerateRoute: RouteGenerator.generateRoute,
-            home: Loading(),
+        return GetMaterialApp(
+          showPerformanceOverlay: false,
+          theme: ThemeData(
+            scaffoldBackgroundColor: Colors.white,
+            useMaterial3: false,
           ),
+          debugShowCheckedModeBanner: false,
+          translations: LocalString(),
+          builder: (context, widget) {
+            return MediaQuery(data: MediaQuery.of(context), child: widget!);
+          },
+          navigatorKey: NavigationService.navigatorKey,
+          onGenerateRoute: RouteGenerator.generateRoute,
+          home: Loading(),
         );
       },
     );

@@ -4,11 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_logout_widget.dart';
+import 'package:ibraheemaltamim_flutter/common_widgets/profile_avatar.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/model/user_info_model.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:ibraheemaltamim_flutter/common_widgets/custom_delete_account_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -18,6 +23,31 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+  void initState() {
+    super.initState();
+    userInfoRxObj.fetchUserInfo();
+  }
+
+  String _formatDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return 'N/A';
+    try {
+      DateTime dt = DateTime.parse(dateStr);
+      String day = DateFormat('d').format(dt);
+      String suffix = 'th';
+      if (day.endsWith('1') && !day.endsWith('11'))
+        suffix = 'st';
+      else if (day.endsWith('2') && !day.endsWith('12'))
+        suffix = 'nd';
+      else if (day.endsWith('3') && !day.endsWith('13'))
+        suffix = 'rd';
+
+      return "DOB : $day$suffix ${DateFormat('MMM , yyyy').format(dt)}";
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +59,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               title: 'Profile',
               trailing: GestureDetector(
                 onTap: () {
-                  NavigationService.navigateTo(Routes.editProfileScreen);
+                  NavigationService.navigateToWithObject(
+                    Routes.editProfileScreen,
+                    userInfoRxObj.dataFetcher.value.data,
+                  );
                 },
                 child: Icon(
                   Icons.edit_note_outlined,
@@ -50,9 +83,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildProfileHeader(),
                     SizedBox(height: 20.h),
                     _buildSettingsSection(),
-
                     SizedBox(height: 20.h),
-                    _buildSignOutButton(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Row(
+                        children: [
+                          Expanded(child: _buildSignOutButton()),
+                          SizedBox(width: 15.w),
+                          Expanded(child: _buildDeleteAccountButton()),
+                        ],
+                      ),
+                    ),
                     SizedBox(height: 100.h),
                   ],
                 ),
@@ -65,38 +106,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileHeader() {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 50.r,
-          backgroundImage: const AssetImage('assets/images/person.png'),
-        ),
-        SizedBox(height: 15.h),
-        Text(
-          'Jenny Wilson',
-          style: TextStyle(
-            fontSize: 22.sp,
-            fontWeight: FontWeight.bold,
-            color: AppColor.textColor,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        Text(
-          'Female',
-          style: TextStyle(
-            fontSize: 16.sp,
-            color: AppColor.textColor.withOpacity(0.8),
-          ),
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          'DOB : 25th Aug , 1990',
-          style: TextStyle(
-            fontSize: 16.sp,
-            color: AppColor.textColor.withOpacity(0.8),
-          ),
-        ),
-      ],
+    return StreamBuilder<UserInfoModel>(
+      stream: userInfoRxObj.dataFetcher.stream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting &&
+            !snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final user = snapshot.data?.data;
+        if (user == null) {
+          return const SizedBox.shrink();
+        }
+
+        return Column(
+          children: [
+            ProfileAvatar(imageUrl: user.avatar, radius: 50),
+            SizedBox(height: 15.h),
+            Text(
+              user.name ?? 'Guest',
+              style: TextStyle(
+                fontSize: 22.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColor.textColor,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              user.gender != null
+                  ? user.gender![0].toUpperCase() + user.gender!.substring(1)
+                  : 'Gender: N/A',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppColor.textColor.withOpacity(0.8),
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              _formatDate(user.birthdate?.toString()),
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppColor.textColor.withOpacity(0.8),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -137,6 +192,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     NavigationService.navigateTo(
                       Routes.termsAndConditionScreen,
                     );
+                  },
+                ),
+                _buildDivider(),
+                _buildSettingItem(
+                  icon: Icons.lock_reset_rounded,
+                  title: 'Change Password',
+                  onTap: () {
+                    NavigationService.navigateTo(Routes.changePasswordScreen);
                   },
                 ),
                 _buildDivider(),
@@ -242,33 +305,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildSignOutButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: SizedBox(
-        width: double.infinity,
-        height: 55.h,
-        child: OutlinedButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              isScrollControlled: true,
-              builder: (context) => CustomLogoutWidget(),
-            );
-          },
-          style: OutlinedButton.styleFrom(
-            side: BorderSide(color: AppColor.textColor, width: 1.5),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.r),
-            ),
+    return SizedBox(
+      height: 55.h,
+      child: OutlinedButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            isScrollControlled: true,
+            builder: (context) => CustomLogoutWidget(),
+          );
+        },
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: AppColor.textColor, width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.r),
           ),
-          child: Text(
-            'Sign Out',
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColor.textColor,
-            ),
+        ),
+        child: Text(
+          'Sign Out',
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+            color: AppColor.textColor,
+          ),
+        ),
+      ),
+    );
+  }
+  
+
+  _buildDeleteAccountButton() {
+    return SizedBox(
+      height: 55.h,
+      child: OutlinedButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            isScrollControlled: true,
+            builder: (context) => const CustomDeleteAccountWidget(),
+          );
+        },
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.redAccent, width: 1.5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.r),
+          ),
+        ),
+        child: Text(
+          'Delete Account',
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+            color: Colors.redAccent,
           ),
         ),
       ),

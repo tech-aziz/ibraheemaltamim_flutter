@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/model/user_info_model.dart';
 import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 import 'package:ibraheemaltamim_flutter/provider/opportunity_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:ibraheemaltamim_flutter/common_widgets/profile_avatar.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/circular_icon_btn.dart';
 import 'package:ibraheemaltamim_flutter/features/home/widgets/build_waiting_list_card_widget.dart';
 import 'package:ibraheemaltamim_flutter/features/home/widgets/filter_dialog.dart';
@@ -23,23 +26,15 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    userInfoRxObj.fetchUserInfo();
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  ImageProvider _getImageProvider(String imageUrl) {
-    final String cleanUrl = imageUrl.trim();
-    if (cleanUrl.toLowerCase().contains('assets/') ||
-        cleanUrl.toLowerCase().contains('assets\\')) {
-      int index = cleanUrl.toLowerCase().indexOf('assets');
-      String assetPath = cleanUrl.substring(index);
-      return AssetImage(assetPath);
-    }
-    if (cleanUrl.isEmpty || !cleanUrl.startsWith('http')) {
-      return const AssetImage('assets/images/img1.png');
-    }
-    return NetworkImage(cleanUrl);
   }
 
   @override
@@ -130,58 +125,57 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildHeader() {
-    return Row(
-      children: [
-        // ProfileScreen
-        GestureDetector(
-          onTap: () {
-            NavigationService.navigateTo(Routes.profileScreen);
-          },
-          child: Row(
-            children: [
-              Container(
-                width: 50.w,
-                height: 50.w,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: _getImageProvider('assets/images/person.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(width: 12.w),
-              Text(
-                'Hi, Jenny',
-                style: TextStyle(
-                  color: AppColor.textColor,
-                  fontSize: 22.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const Spacer(),
-        Consumer<OpportunityProvider>(
-          builder: (context, opportunityProvider, child) {
-            return CircularIconBtn(
-              icon: Icons.favorite_border,
+    return StreamBuilder<UserInfoModel>(
+      stream: userInfoRxObj.dataFetcher.stream,
+      builder: (context, snapshot) {
+        final user = snapshot.data?.data;
+        return Row(
+          children: [
+            // ProfileScreen
+            GestureDetector(
               onTap: () {
-                NavigationService.navigateTo(Routes.wishlistScreen);
+                NavigationService.navigateTo(Routes.profileScreen);
               },
-              badgeCount: opportunityProvider.favoriteCount,
-            );
-          },
-        ),
-        SizedBox(width: 8.w),
-        CircularIconBtn(
-          icon: Icons.notifications_none,
-          onTap: () {
-            NavigationService.navigateTo(Routes.notificationScreen);
-          },
-        ),
-      ],
+              child: Row(
+                children: [
+                  ProfileAvatar(
+                    imageUrl: user?.avatar,
+                    radius: 25,
+                  ),
+                  SizedBox(width: 12.w),
+                  Text(
+                    'Hi, ${user?.name?.split(' ').first ?? 'Guest'}',
+                    style: TextStyle(
+                      color: AppColor.textColor,
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Spacer(),
+            Consumer<OpportunityProvider>(
+              builder: (context, opportunityProvider, child) {
+                return CircularIconBtn(
+                  icon: Icons.favorite_border,
+                  onTap: () {
+                    NavigationService.navigateTo(Routes.wishlistScreen);
+                  },
+                  badgeCount: opportunityProvider.favoriteCount,
+                );
+              },
+            ),
+            SizedBox(width: 8.w),
+            CircularIconBtn(
+              icon: Icons.notifications_none,
+              onTap: () {
+                NavigationService.navigateTo(Routes.notificationScreen);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

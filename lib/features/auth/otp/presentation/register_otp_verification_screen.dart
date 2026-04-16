@@ -212,6 +212,7 @@ class _RegisterOtpVerificationScreenState
                         UIHelper.verticalSpace(40.h),
                         CustomButton(
                           text: 'Verify'.tr,
+                          isLoading: _isLoading,
                           backgroundColor: AppColor.textColor,
                           onPressed: () async {
                             if (!_isLoading) {
