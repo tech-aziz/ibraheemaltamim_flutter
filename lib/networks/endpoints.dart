@@ -87,8 +87,23 @@ final class Endpoints {
   static String favourites() => "/api/researcher/favourites";
   // -------------------Favourites end-------------------
 
+  // -------------------Delete Favourites start-------------------
+  static String deleteFavourites(String favouriteId) => "/api/researcher/favourites/$favouriteId";
+  // -------------------Delete Favourites end-------------------
 
 
+  // -------------------Opportunities start-------------------
+  static String opportunitiesList() => "/api/opportunities";
+  // -------------------Opportunities end-------------------
+
+  // -------------------Add Favourites start-------------------
+  static String addFavourites() => "/api/researcher/favourites";
+  // -------------------Add Favourites end-------------------
+
+
+  // -------------------Opportunity Details start-------------------
+  static String opportunityDetails(String opportunityId) => "/api/opportunities/$opportunityId";
+  // -------------------Opportunity Details end-------------------
 
 //   // -------------------Verify phone start-------------------
 //   static String verifyphone() => "/login/verify-otp";

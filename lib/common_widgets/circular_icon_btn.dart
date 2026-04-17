@@ -6,12 +6,14 @@ class CircularIconBtn extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
   final int badgeCount;
+  final Color? iconColor;
 
   const CircularIconBtn({
     super.key,
     required this.icon,
     required this.onTap,
     this.badgeCount = 0,
+    this.iconColor,
   });
 
   @override
@@ -36,7 +38,7 @@ class CircularIconBtn extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Center(
-              child: Icon(icon, color: AppColor.textColor, size: 22.sp),
+              child: Icon(icon, color: iconColor ?? AppColor.textColor, size: 22.sp),
             ),
             if (badgeCount > 0)
               Positioned(

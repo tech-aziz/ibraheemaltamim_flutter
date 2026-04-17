@@ -8,9 +8,14 @@ import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_details/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_details_model.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class OpportunityDetailScreen extends StatefulWidget {
-  const OpportunityDetailScreen({super.key});
+  final int? opportunityId;
+  const OpportunityDetailScreen({super.key, this.opportunityId});
 
   @override
   State<OpportunityDetailScreen> createState() =>
@@ -18,6 +23,14 @@ class OpportunityDetailScreen extends StatefulWidget {
 }
 
 class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.opportunityId != null) {
+      getOpportunityDetailsRx.fetchDetails(widget.opportunityId.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,101 +56,126 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
 
             // ------------ details information start--------
             Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      UIHelper.verticalSpace(10.h),
-                      // 1. Top Card Component
-                      _buildProfileCard(),
-                      SizedBox(height: 30.h),
+              child: StreamBuilder<OpportunityDetailsModel>(
+                stream: getOpportunityDetailsRx.getFileData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return _buildShimmer();
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
 
-                      // 2. Title & Chips
-                      Text(
-                        'Assessing the Efficacy and Safety of Malaria Prevention and Treatment Strategies: A Systematic Review and Meta-Analysis',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xff000066),
-                        ),
-                      ),
-                      SizedBox(height: 15.h),
-                      Wrap(
-                        spacing: 10.w,
-                        runSpacing: 10.h,
+                  final data = snapshot.data?.data;
+                  if (data == null) {
+                    return const Center(child: Text('No details found.'));
+                  }
+
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildChip('ENT'),
-                          _buildChip('Oncology'),
-                          _buildChip('Medicine'),
-                          _buildChip('Immuno-oncology'),
-                        ],
-                      ),
-                      SizedBox(height: 30.h),
+                          UIHelper.verticalSpace(10.h),
+                          // 1. Top Card Component
+                          _buildProfileCard(data),
+                          SizedBox(height: 30.h),
 
-                      // 3. Research Sections
-                      _buildInfoSection(
-                        title: 'Research Mentor',
-                        items: [
-                          'Responsible for the study',
-                          'Provides scientific guidance on study design, methodology, and manuscript development',
-                          'Ensures academic rigor and alignment with journal standards',
-                          'Published at least 50 studies in indexed journals',
-                        ],
-                      ),
-                      SizedBox(height: 20.h),
-                      _buildInfoSection(
-                        title: 'Research Program Director',
-                        items: [
-                          'Oversees the entire research process from initiation to submission',
-                          'Ensures quality control, milestone tracking and successful project completion',
-                        ],
-                      ),
-                      SizedBox(height: 30.h),
-
-                      // 4. Why Join Section
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.join_icon,
-                            fit: BoxFit.cover,
-                            height: 22.h,
-                            width: 22.w,
-                          ),
-
-                          SizedBox(width: 10.w),
+                          // 2. Title & Chips
                           Text(
-                            'Why Join This Project?',
+                            data.title ?? 'No Title',
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.bold,
                               color: const Color(0xff000066),
                             ),
                           ),
+                          SizedBox(height: 15.h),
+                          if (data.categories?.isNotEmpty == true)
+                            Wrap(
+                              spacing: 10.w,
+                              runSpacing: 10.h,
+                              children: data.categories!
+                                  .map((cat) => _buildChip(cat.name ?? ''))
+                                  .toList(),
+                            ),
+                          SizedBox(height: 30.h),
+
+                          // 3. Research Sections
+                          if (data.desciptions != null)
+                            ...data.desciptions!.map(
+                              (desc) => Padding(
+                                padding: EdgeInsets.only(bottom: 20.h),
+                                child: _buildInfoSection(
+                                  title: desc.title ?? 'Description',
+                                  items: [desc.description ?? ''],
+                                ),
+                              ),
+                            ),
+
+                          if (data.specialities?.isNotEmpty == true ||
+                              data.studydesignTypes?.isNotEmpty == true) ...[
+                            Text(
+                              'Specialities & Design',
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xff000066),
+                              ),
+                            ),
+                            SizedBox(height: 15.h),
+                            Wrap(
+                              spacing: 10.w,
+                              runSpacing: 10.h,
+                              children: [
+                                if (data.specialities != null)
+                                  ...data.specialities!.map(
+                                    (s) => _buildChip(s.name ?? ''),
+                                  ),
+                                if (data.studydesignTypes != null)
+                                  ...data.studydesignTypes!.map(
+                                    (s) => _buildChip(s.name ?? ''),
+                                  ),
+                              ],
+                            ),
+                            SizedBox(height: 30.h),
+                          ], // 4. Why Join Section (Optional from static or could be part of descriptions)
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                AppIcons.join_icon,
+                                fit: BoxFit.cover,
+                                height: 22.h,
+                                width: 22.w,
+                              ),
+                              SizedBox(width: 10.w),
+                              Text(
+                                'Overview',
+                                style: TextStyle(
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xff000066),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20.h),
+                          Text(
+                            data.overview ?? 'No overview available.',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.grey[700],
+                              height: 1.5,
+                            ),
+                          ),
+
+                          SizedBox(height: 50.h), // Extra space for FAB
                         ],
                       ),
-                      SizedBox(height: 20.h),
-                      _buildJoinItem(
-                        'Data analysis and publication fees covered',
-                      ),
-                      _buildJoinItem(
-                        'End-to-end research supervision until manuscript submission',
-                      ),
-                      _buildJoinItem(
-                        'Access to recorded Meta-Analysis Expert Academy course',
-                      ),
-                      _buildJoinItem('Certificate of participation'),
-                      _buildJoinItem(
-                        'Hands-on mentorship from experienced researchers',
-                      ),
-                      _buildJoinItem(
-                        'Co-authorship on a submitted manuscript within 2 months',
-                      ),
-                      SizedBox(height: 50.h), // Extra space for FAB
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
             ),
             // ------------ details information end--------
@@ -159,7 +197,47 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
     );
   }
 
-  Widget _buildProfileCard() {
+  Widget _buildShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Column(
+          children: [
+            SizedBox(height: 10.h),
+            Container(
+              height: 200.h,
+              width: double.infinity,
+              color: Colors.white,
+            ),
+            SizedBox(height: 30.h),
+            Container(height: 20.h, width: 200.w, color: Colors.white),
+            SizedBox(height: 15.h),
+            Row(
+              children: List.generate(
+                3,
+                (index) => Container(
+                  margin: EdgeInsets.only(right: 10.w),
+                  height: 30.h,
+                  width: 60.w,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: 30.h),
+            Container(
+              height: 150.h,
+              width: double.infinity,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileCard(Data data) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
@@ -180,8 +258,11 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
                   children: [
                     CircleAvatar(
                       radius: 30.r,
-                      backgroundImage: const AssetImage(
-                        'assets/images/img1.png',
+                      backgroundColor: Colors.white24,
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 30.sp,
                       ),
                     ),
                     SizedBox(width: 15.w),
@@ -189,7 +270,10 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Dr. Jhon Smith',
+                          data.mentor?.user is Map
+                              ? (data.mentor?.user['name'] ??
+                                    'Mentor #${data.mentorId ?? '-'}')
+                              : 'Mentor #${data.mentorId ?? '-'}',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18.sp,
@@ -197,7 +281,7 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
                           ),
                         ),
                         Text(
-                          'Meta-Analysis',
+                          data.mentor?.department ?? 'Department',
                           style: TextStyle(
                             color: Colors.white70,
                             fontSize: 14.sp,
@@ -208,7 +292,7 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
                   ],
                 ),
                 Text(
-                  '\$120',
+                  '\$${data.price ?? '0'}',
                   style: TextStyle(color: AppColor.cFFFFFF, fontSize: 16.sp),
                 ),
               ],
@@ -219,13 +303,16 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
           SizedBox(height: 10.h),
           _buildStatRow(
             'Deadline',
-            '11 Days Left',
+            data.deadLine?.toIso8601String().split('T').first ?? '-',
             valueColor: AppColor.cD64545,
           ),
           SizedBox(height: 10.h),
-          _buildStatRow('Availability', '12 Seats Only'),
+          _buildStatRow('Duration', data.durations ?? '-'),
           SizedBox(height: 10.h),
-          _buildStatRow('Payment', 'Flexible'),
+          _buildStatRow(
+            'Start Date',
+            data.startDate?.toIso8601String().split('T').first ?? '-',
+          ),
           SizedBox(height: 20.h),
           const Divider(color: Colors.white24),
           SizedBox(height: 20.h),
@@ -332,49 +419,20 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
           ...items.map(
             (item) => Padding(
               padding: EdgeInsets.only(bottom: 10.h),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '•  ',
-                    style: TextStyle(fontSize: 18.sp, color: AppColor.darkNavy),
+              child: Html(
+                data: item,
+                style: {
+                  "body": Style(
+                    fontSize: FontSize(13.sp),
+                    color: Colors.grey[600],
+                    lineHeight: const LineHeight(1.5),
+                    margin: Margins.zero,
+                    padding: HtmlPaddings.zero,
                   ),
-                  Expanded(
-                    child: Text(
-                      item,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: Colors.grey[600],
-                        height: 1.4,
-                      ),
-                    ),
-                  ),
-                ],
+                  "ul": Style(margin: Margins.only(left: 0.w)),
+                  "li": Style(margin: Margins.only(bottom: 0.h)),
+                },
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildJoinItem(String text) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 15.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SvgPicture.asset(AppIcons.check_cycle, height: 20.h, width: 20.w),
-          // Icon(
-          //   Icons.check_circle_outline,
-          //   color: const Color(0xff000066),
-          //   size: 20.sp,
-          // ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(fontSize: 14.sp, color: AppColor.c06113A),
             ),
           ),
         ],

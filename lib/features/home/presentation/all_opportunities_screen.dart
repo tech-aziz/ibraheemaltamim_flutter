@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
-import 'package:ibraheemaltamim_flutter/provider/opportunity_provider.dart';
 import 'package:ibraheemaltamim_flutter/features/home/widgets/opportunity_card_widget.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_list_model.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_list/rx.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AllOpportunitiesScreen extends StatefulWidget {
   const AllOpportunitiesScreen({super.key});
@@ -16,9 +17,31 @@ class AllOpportunitiesScreen extends StatefulWidget {
 }
 
 class _AllOpportunitiesScreenState extends State<AllOpportunitiesScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    getOpportunitiesRx.fetchOpportunities(isRefresh: true);
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      if (getOpportunitiesRx.hasMoreData) {
+        getOpportunitiesRx.fetchOpportunities(isRefresh: false);
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
-    final opportunityProvider = Provider.of<OpportunityProvider>(context);
+
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: SafeArea(
@@ -40,19 +63,61 @@ class _AllOpportunitiesScreenState extends State<AllOpportunitiesScreen> {
                   ],
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        UIHelper.verticalSpace(10.h),
-                        OpportunityCard(
-                          opportunities: opportunityProvider.opportunities,
-                          onFavoriteCountChanged: (count) {
-                            // No longer needed as Provider handles this
+                  child: StreamBuilder<OpportunityListModel>(
+                    stream: getOpportunitiesRx.getFileData,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return ListView.separated(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                          itemCount: 4,
+                          separatorBuilder: (context, index) => SizedBox(height: 20.h),
+                          itemBuilder: (context, index) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[200]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                height: 350.h,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                              ),
+                            );
                           },
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      }
+                      
+                      final list = snapshot.data?.data ?? [];
+                      if (list.isEmpty) {
+                        return const Center(child: Text('No opportunities available.'));
+                      }
+
+                      return SingleChildScrollView(
+                        controller: _scrollController,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            UIHelper.verticalSpace(10.h),
+                            OpportunityCard(
+                              opportunities: list,
+                              onFavoriteCountChanged: (count) {
+                                // Handled via API/Rx eventually
+                              },
+                            ),
+                            if (getOpportunitiesRx.hasMoreData)
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.h),
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                          ],
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
               ],

@@ -7,6 +7,8 @@ import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/provider/wishlist_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:ibraheemaltamim_flutter/networks/endpoints.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_remove_favourite/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_wishlist/rx.dart';
 
 class WishlistCardWidget extends StatefulWidget {
   final List<Datum> wishLists;
@@ -24,12 +26,40 @@ class WishlistCardWidget extends StatefulWidget {
 class _WishlistCardWidgetState extends State<WishlistCardWidget> {
 
   
-  void _toggleFavorite(int index) {
-    Provider.of<WishlistProvider>(context, listen: false).toggleFavorite(index);
+  Future<void> _toggleFavorite(int index) async {
+    final model = widget.wishLists[index];
+    
+    // Fallback ID checking using fav object if parent id isn't populated
+    final favId = model.id?.toString();
+    if (favId != null && favId.isNotEmpty) {
+      // Show loader
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierColor: Colors.black.withOpacity(0.3),
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(color: Colors.white),
+        ),
+      );
 
-    if (widget.onFavoriteCountChanged != null) {
-      final provider = Provider.of<WishlistProvider>(context, listen: false);
-      widget.onFavoriteCountChanged!(provider.favoriteCount);
+      // Execute the API hook
+      final success = await removeFavouriteRx.deleteFavourite(favId);
+      
+      // Close the loader
+      if (mounted) Navigator.pop(context);
+
+      if (success) {
+        // Re-fetch wishlist on successful removal
+        getWishlistRx.fetchWishlist();
+      }
+    } else {
+      // Local state fallback if needed
+      Provider.of<WishlistProvider>(context, listen: false).toggleFavorite(index);
+
+      if (widget.onFavoriteCountChanged != null) {
+        final provider = Provider.of<WishlistProvider>(context, listen: false);
+        widget.onFavoriteCountChanged!(provider.favoriteCount);
+      }
     }
   }
 
@@ -63,15 +93,21 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Icon(icon, color: AppColor.textColor, size: 20.sp),
-              SizedBox(width: 10.w),
-              Text(
-                text,
-                style: TextStyle(color: Colors.grey[700], fontSize: 14.sp),
-              ),
-            ],
+          Expanded(
+            child: Row(
+              children: [
+                Icon(icon, color: AppColor.textColor, size: 20.sp),
+                SizedBox(width: 10.w),
+                Flexible(
+                  child: Text(
+                    text,
+                    style: TextStyle(color: Colors.grey[700], fontSize: 14.sp),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
           ),
           price != null
               ? Text(
@@ -209,6 +245,7 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
                           onPressed: () {
                             NavigationService.navigateTo(
                               Routes.opportunityDetail,
+                              arguments: {'id': model.favouriteableId},
                             );
                           },
                           style: ElevatedButton.styleFrom(

@@ -7,7 +7,12 @@ import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
 import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_list_model.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_list/rx.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:ibraheemaltamim_flutter/provider/opportunity_provider.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_wishlist/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/wish_list_model.dart';
 import 'package:provider/provider.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/profile_avatar.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/circular_icon_btn.dart';
@@ -29,6 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     userInfoRxObj.fetchUserInfo();
+    getOpportunitiesRx.fetchOpportunities(perPage: 15, isRefresh: true);
+    getWishlistRx.fetchWishlist();
   }
 
   @override
@@ -74,12 +81,48 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        Consumer<OpportunityProvider>(
-                          builder: (context, opportunityProvider, child) {
+                        StreamBuilder<OpportunityListModel>(
+                          stream: getOpportunitiesRx.getFileData,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                itemCount: 2,
+                                separatorBuilder: (context, index) => SizedBox(height: 20.h),
+                                itemBuilder: (context, index) {
+                                  return Shimmer.fromColors(
+                                    baseColor: Colors.grey[200]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Container(
+                                      height: 350.h,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20.r),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                            if (snapshot.hasError) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                                child: Center(child: Text('Error: ${snapshot.error}')),
+                              );
+                            }
+                            
+                            final list = snapshot.data?.data ?? [];
+                            if (list.isEmpty) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                                child: const Center(child: Text('No opportunities available.')),
+                              );
+                            }
+                            
                             return OpportunityCard(
-                              opportunities: opportunityProvider.opportunities
-                                  .take(2)
-                                  .toList(),
+                              opportunities: list.take(15).toList(),
                             );
                           },
                         ),
@@ -155,14 +198,16 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const Spacer(),
-            Consumer<OpportunityProvider>(
-              builder: (context, opportunityProvider, child) {
+            StreamBuilder<WishListModel>(
+              stream: getWishlistRx.getFileData,
+              builder: (context, snapshot) {
                 return CircularIconBtn(
                   icon: Icons.favorite_border,
+                  iconColor: Colors.red,
                   onTap: () {
                     NavigationService.navigateTo(Routes.wishlistScreen);
                   },
-                  badgeCount: opportunityProvider.favoriteCount,
+                  badgeCount: snapshot.data?.data?.length ?? 0,
                 );
               },
             ),

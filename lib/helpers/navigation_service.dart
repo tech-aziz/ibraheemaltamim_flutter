@@ -8,15 +8,21 @@ final class NavigationService {
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  static Future<dynamic> navigateTo(String routeName) =>
-      navigatorKey.currentState!.pushNamed(routeName);
+  static Future<dynamic> navigateTo(String routeName, {Object? arguments}) =>
+      navigatorKey.currentState!.pushNamed(routeName, arguments: arguments);
 
-  static Future<dynamic> navigateToReplacement(String routeName) =>
-      navigatorKey.currentState!.pushReplacementNamed(routeName);
-
-  static Future<dynamic> navigateToUntilReplacement(String routeName) =>
+  static Future<dynamic> navigateToReplacement(String routeName,
+          {Object? arguments}) =>
       navigatorKey.currentState!
-          .pushNamedAndRemoveUntil(routeName, (route) => false);
+          .pushReplacementNamed(routeName, arguments: arguments);
+
+  static Future<dynamic> navigateToUntilReplacement(String routeName,
+          {Object? arguments}) =>
+      navigatorKey.currentState!.pushNamedAndRemoveUntil(
+        routeName,
+        (route) => false,
+        arguments: arguments,
+      );
 
   static Future<dynamic> popAndReplace(String routeName) async {
     return await navigatorKey.currentState!.popAndPushNamed(routeName);
