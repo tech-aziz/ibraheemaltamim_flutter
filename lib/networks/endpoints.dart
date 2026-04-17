@@ -79,6 +79,10 @@ final class Endpoints {
   static String termsAndConditions() => "/api/dynamic-pages/single/terms-and-conditions";
   // -------------------Terms And Conditions end-------------------
 
+  // -------------------Services start-------------------
+  static String services() => "/api/services";
+  // -------------------Services end-------------------
+
 
 
 
