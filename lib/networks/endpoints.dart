@@ -83,6 +83,10 @@ final class Endpoints {
   static String services() => "/api/services";
   // -------------------Services end-------------------
 
+  // -------------------Favourites start-------------------
+  static String favourites() => "/api/researcher/favourites";
+  // -------------------Favourites end-------------------
+
 
 
 

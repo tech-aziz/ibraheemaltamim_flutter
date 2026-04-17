@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/custom_appbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
-import 'package:ibraheemaltamim_flutter/features/home/model/wishlist_model.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/wish_list_model.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_wishlist/rx.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
+import 'package:shimmer/shimmer.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -13,50 +15,12 @@ class WishlistScreen extends StatefulWidget {
   @override
   State<WishlistScreen> createState() => _WishlistScreenState();
 }
-
 class _WishlistScreenState extends State<WishlistScreen> {
-  final List<WishlistModel> wishLists = [
-    WishlistModel(
-      title: 'Assessing the Efficacy and Safety',
-      description:
-          'Explore gene therapy approaches for rare genetic diseases with our multidisciplinary team.',
-      doctor: 'Dr. Jhon Smith',
-      deadline: 'Mar 15, 2026',
-      category: 'Neurologist',
-      imageUrl: 'assets/images/img1.png',
-      isFavorite: true,
-    ),
-    WishlistModel(
-      title: 'Assessing the Efficacy and Safety',
-      description:
-          'Explore gene therapy approaches for rare genetic diseases with our multidisciplinary team.',
-      doctor: 'Dr. Sarah Chen',
-      deadline: 'Mar 15, 2026',
-      category: 'Neurologist',
-      imageUrl: 'assets/images/img2.png',
-      isFavorite: true,
-    ),
-    WishlistModel(
-      title: 'Assessing the Efficacy and Safety',
-      description:
-          'Explore gene therapy approaches for rare genetic diseases with our multidisciplinary team.',
-      doctor: 'Dr. Jhon Smith',
-      deadline: 'Mar 15, 2026',
-      category: 'Neurologist',
-      imageUrl: 'assets/images/img1.png',
-      isFavorite: true,
-    ),
-    WishlistModel(
-      title: 'Assessing the Efficacy and Safety',
-      description:
-          'Explore gene therapy approaches for rare genetic diseases with our multidisciplinary team.',
-      doctor: 'Dr. Sarah Chen',
-      deadline: 'Mar 15, 2026',
-      category: 'Neurologist',
-      imageUrl: 'assets/images/img2.png',
-      isFavorite: true,
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    getWishlistRx.fetchWishlist();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,19 +49,53 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
                 // ------------opportunity card-----------
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        UIHelper.verticalSpace(10.h),
-                        WishlistCardWidget(
-                          wishLists: wishLists,
-                          onFavoriteCountChanged: (count) {
-                            // Local handling or ignored
+                  child: StreamBuilder<WishListModel>(
+                    stream: getWishlistRx.getFileData,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return ListView.separated(
+                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                          itemCount: 4,
+                          separatorBuilder: (context, index) => SizedBox(height: 20.h),
+                          itemBuilder: (context, index) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[200]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                height: 350.h,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20.r),
+                                ),
+                              ),
+                            );
                           },
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      }
+                      
+                      final dataList = snapshot.data?.data ?? [];
+                      if (dataList.isEmpty) {
+                        return const Center(child: Text('No favorites found.'));
+                      }
+
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            UIHelper.verticalSpace(10.h),
+                            WishlistCardWidget(
+                              wishLists: dataList,
+                              onFavoriteCountChanged: (count) {
+                                // Local handling or ignored
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ),
                 // ------------opportunity end-----------
