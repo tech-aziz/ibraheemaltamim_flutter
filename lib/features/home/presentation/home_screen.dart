@@ -84,26 +84,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         StreamBuilder<OpportunityListModel>(
                           stream: getOpportunitiesRx.getFileData,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                                itemCount: 2,
-                                separatorBuilder: (context, index) => SizedBox(height: 20.h),
-                                itemBuilder: (context, index) {
-                                  return Shimmer.fromColors(
-                                    baseColor: Colors.grey[200]!,
-                                    highlightColor: Colors.grey[100]!,
-                                    child: Container(
-                                      height: 350.h,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20.r),
-                                      ),
-                                    ),
-                                  );
-                                },
+                            if (snapshot.connectionState == ConnectionState.waiting ||
+                                snapshot.data?.data == null) {
+                              return const OpportunityCard(
+                                opportunities: [],
+                                isLoading: true,
                               );
                             }
                             if (snapshot.hasError) {

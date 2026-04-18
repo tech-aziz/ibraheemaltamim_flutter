@@ -10,7 +10,8 @@ import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_details/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_details_model.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_details_model.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class OpportunityDetailScreen extends StatefulWidget {
@@ -59,65 +60,53 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
               child: StreamBuilder<OpportunityDetailsModel>(
                 stream: getOpportunityDetailsRx.getFileData,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return _buildShimmer();
-                  }
-                  if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }
+                  final isLoading =
+                      snapshot.connectionState == ConnectionState.waiting ||
+                          snapshot.data?.data == null;
+                  final data = isLoading
+                      ? Data(
+                          id: 0,
+                          title: 'Loading Opportunity Details...',
+                          overview:
+                              'This is a placeholder for the opportunity overview description while content is loading.',
+                          price: '000',
+                          deadLine: DateTime.now(),
+                          durations: '0 Months',
+                          startDate: DateTime.now(),
+                          categories: [Category(name: 'Loading...')],
+                          mentor: Mentor(
+                            department: 'Department',
+                            user: {'name': 'Mentor Name'},
+                          ),
+                          desciptions: [
+                            Desciption(
+                              title: 'Description Title',
+                              description: 'Description content placeholder.',
+                            ),
+                          ],
+                        )
+                      : snapshot.data?.data;
 
-                  final data = snapshot.data?.data;
-                  if (data == null) {
+                  if (data == null && !isLoading) {
                     return const Center(child: Text('No details found.'));
                   }
 
-                  return SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          UIHelper.verticalSpace(10.h),
-                          // 1. Top Card Component
-                          _buildProfileCard(data),
-                          SizedBox(height: 30.h),
+                  return Skeletonizer(
+                    enabled: isLoading,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            UIHelper.verticalSpace(10.h),
+                            // 1. Top Card Component
+                            _buildProfileCard(data!),
+                            SizedBox(height: 30.h),
 
-                          // 2. Title & Chips
-                          Text(
-                            data.title ?? 'No Title',
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xff000066),
-                            ),
-                          ),
-                          SizedBox(height: 15.h),
-                          if (data.categories?.isNotEmpty == true)
-                            Wrap(
-                              spacing: 10.w,
-                              runSpacing: 10.h,
-                              children: data.categories!
-                                  .map((cat) => _buildChip(cat.name ?? ''))
-                                  .toList(),
-                            ),
-                          SizedBox(height: 30.h),
-
-                          // 3. Research Sections
-                          if (data.desciptions != null)
-                            ...data.desciptions!.map(
-                              (desc) => Padding(
-                                padding: EdgeInsets.only(bottom: 20.h),
-                                child: _buildInfoSection(
-                                  title: desc.title ?? 'Description',
-                                  items: [desc.description ?? ''],
-                                ),
-                              ),
-                            ),
-
-                          if (data.specialities?.isNotEmpty == true ||
-                              data.studydesignTypes?.isNotEmpty == true) ...[
+                            // 2. Title & Chips
                             Text(
-                              'Specialities & Design',
+                              data.title ?? 'No Title',
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
@@ -125,60 +114,94 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
                               ),
                             ),
                             SizedBox(height: 15.h),
-                            Wrap(
-                              spacing: 10.w,
-                              runSpacing: 10.h,
-                              children: [
-                                if (data.specialities != null)
-                                  ...data.specialities!.map(
-                                    (s) => _buildChip(s.name ?? ''),
-                                  ),
-                                if (data.studydesignTypes != null)
-                                  ...data.studydesignTypes!.map(
-                                    (s) => _buildChip(s.name ?? ''),
-                                  ),
-                              ],
-                            ),
-                            SizedBox(height: 30.h),
-                          ], // 4. Why Join Section (Optional from static or could be part of descriptions)
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                AppIcons.join_icon,
-                                fit: BoxFit.cover,
-                                height: 22.h,
-                                width: 22.w,
+                            if (data.categories?.isNotEmpty == true)
+                              Wrap(
+                                spacing: 10.w,
+                                runSpacing: 10.h,
+                                children: data.categories!
+                                    .map((cat) => _buildChip(cat.name ?? ''))
+                                    .toList(),
                               ),
-                              SizedBox(width: 10.w),
+                            SizedBox(height: 30.h),
+
+                            // 3. Research Sections
+                            if (data.desciptions != null)
+                              ...data.desciptions!.map(
+                                (desc) => Padding(
+                                  padding: EdgeInsets.only(bottom: 20.h),
+                                  child: _buildInfoSection(
+                                    title: desc.title ?? 'Description',
+                                    items: [desc.description ?? ''],
+                                  ),
+                                ),
+                              ),
+
+                            if (data.specialities?.isNotEmpty == true ||
+                                data.studydesignTypes?.isNotEmpty == true) ...[
                               Text(
-                                'Overview',
+                                'Specialities & Design',
                                 style: TextStyle(
                                   fontSize: 18.sp,
                                   fontWeight: FontWeight.bold,
                                   color: const Color(0xff000066),
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(height: 20.h),
-                          Text(
-                            data.overview ?? 'No overview available.',
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.grey[700],
-                              height: 1.5,
+                              SizedBox(height: 15.h),
+                              Wrap(
+                                spacing: 10.w,
+                                runSpacing: 10.h,
+                                children: [
+                                  if (data.specialities != null)
+                                    ...data.specialities!.map(
+                                      (s) => _buildChip(s.name ?? ''),
+                                    ),
+                                  if (data.studydesignTypes != null)
+                                    ...data.studydesignTypes!.map(
+                                      (s) => _buildChip(s.name ?? ''),
+                                    ),
+                                ],
+                              ),
+                              SizedBox(height: 30.h),
+                            ], // 4. Why Join Section (Optional from static or could be part of descriptions)
+                            Row(
+                              children: [
+                                SvgPicture.asset(
+                                  AppIcons.join_icon,
+                                  fit: BoxFit.cover,
+                                  height: 22.h,
+                                  width: 22.w,
+                                ),
+                                SizedBox(width: 10.w),
+                                Text(
+                                  'Overview',
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xff000066),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
+                            SizedBox(height: 20.h),
+                            Text(
+                              data.overview ?? 'No overview available.',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Colors.grey[700],
+                                height: 1.5,
+                              ),
+                            ),
 
-                          SizedBox(height: 50.h), // Extra space for FAB
-                        ],
+                            SizedBox(height: 50.h), // Extra space for FAB
+                          ],
+                        ),
                       ),
                     ),
                   );
                 },
               ),
+              // ------------ details information end--------
             ),
-            // ------------ details information end--------
           ],
         ),
       ),
@@ -197,45 +220,7 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
     );
   }
 
-  Widget _buildShimmer() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Column(
-          children: [
-            SizedBox(height: 10.h),
-            Container(
-              height: 200.h,
-              width: double.infinity,
-              color: Colors.white,
-            ),
-            SizedBox(height: 30.h),
-            Container(height: 20.h, width: 200.w, color: Colors.white),
-            SizedBox(height: 15.h),
-            Row(
-              children: List.generate(
-                3,
-                (index) => Container(
-                  margin: EdgeInsets.only(right: 10.w),
-                  height: 30.h,
-                  width: 60.w,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: 30.h),
-            Container(
-              height: 150.h,
-              width: double.infinity,
-              color: Colors.white,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Shimmer removed in favor of Skeletonizer
 
   Widget _buildProfileCard(Data data) {
     return Container(

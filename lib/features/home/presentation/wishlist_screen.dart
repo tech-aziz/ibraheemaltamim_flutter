@@ -52,24 +52,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   child: StreamBuilder<WishListModel>(
                     stream: getWishlistRx.getFileData,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return ListView.separated(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                          itemCount: 4,
-                          separatorBuilder: (context, index) => SizedBox(height: 20.h),
-                          itemBuilder: (context, index) {
-                            return Shimmer.fromColors(
-                              baseColor: Colors.grey[200]!,
-                              highlightColor: Colors.grey[100]!,
-                              child: Container(
-                                height: 350.h,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20.r),
-                                ),
-                              ),
-                            );
-                          },
+                      if (snapshot.connectionState == ConnectionState.waiting ||
+                          snapshot.data?.data == null) {
+                        return const WishlistCardWidget(
+                          wishLists: [],
+                          isLoading: true,
                         );
                       }
                       if (snapshot.hasError) {

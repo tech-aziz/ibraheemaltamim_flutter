@@ -7,7 +7,7 @@ import 'package:ibraheemaltamim_flutter/features/home/widgets/opportunity_card_w
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_list_model.dart';
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_list/rx.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_list/rx.dart';
 
 class AllOpportunitiesScreen extends StatefulWidget {
   const AllOpportunitiesScreen({super.key});
@@ -66,24 +66,13 @@ class _AllOpportunitiesScreenState extends State<AllOpportunitiesScreen> {
                   child: StreamBuilder<OpportunityListModel>(
                     stream: getOpportunitiesRx.getFileData,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return ListView.separated(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                          itemCount: 4,
-                          separatorBuilder: (context, index) => SizedBox(height: 20.h),
-                          itemBuilder: (context, index) {
-                            return Shimmer.fromColors(
-                              baseColor: Colors.grey[200]!,
-                              highlightColor: Colors.grey[100]!,
-                              child: Container(
-                                height: 350.h,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20.r),
-                                ),
-                              ),
-                            );
-                          },
+                      if (snapshot.connectionState == ConnectionState.waiting ||
+                          snapshot.data?.data == null) {
+                        return const SingleChildScrollView(
+                          child: OpportunityCard(
+                            opportunities: [],
+                            isLoading: true,
+                          ),
                         );
                       }
                       if (snapshot.hasError) {

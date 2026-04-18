@@ -9,14 +9,17 @@ import 'package:provider/provider.dart';
 import 'package:ibraheemaltamim_flutter/networks/endpoints.dart';
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_remove_favourite/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_wishlist/rx.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class WishlistCardWidget extends StatefulWidget {
   final List<Datum> wishLists;
   final Function(int count)? onFavoriteCountChanged;
+  final bool isLoading;
   const WishlistCardWidget({
     super.key,
     required this.wishLists,
     this.onFavoriteCountChanged,
+    this.isLoading = false,
   });
 
   @override
@@ -122,11 +125,33 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: widget.wishLists.asMap().entries.map((entry) {
-        final model = entry.value;
-        final fav = model.favouriteable;
-        final categoryDisplay = model.favouriteableType?.split('\\\\').last ?? 'General';
+    final displayList =
+        widget.isLoading
+            ? List.generate(
+              3,
+              (index) => Datum(
+                id: index,
+                favouriteableType: 'Loading\\\\Opportunity',
+                favouriteable: Favouriteable(
+                  title: 'Loading Favorite Title...',
+                  overview:
+                      'This is a placeholder for the wishlist skeleton loading state.',
+                  price: '000',
+                  mentorId: 0,
+                  deadLine: DateTime.now(),
+                ),
+              ),
+            )
+            : widget.wishLists;
+
+    return Skeletonizer(
+      enabled: widget.isLoading,
+      child: Column(
+        children: displayList.asMap().entries.map((entry) {
+          final model = entry.value;
+          final fav = model.favouriteable;
+          final categoryDisplay =
+              model.favouriteableType?.split('\\\\').last ?? 'General';
         
         return Padding(
           padding: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
@@ -273,6 +298,7 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
           ),
         );
       }).toList(),
+    ),
     );
   }
 }

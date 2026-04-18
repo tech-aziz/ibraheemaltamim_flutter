@@ -10,14 +10,17 @@ import 'package:ibraheemaltamim_flutter/features/home/data/rx_wishlist/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/wish_list_model.dart'
     as wishlist;
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_remove_favourite/rx.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class OpportunityCard extends StatefulWidget {
   final List<Datum> opportunities;
   final Function(int count)? onFavoriteCountChanged;
+  final bool isLoading;
   const OpportunityCard({
     super.key,
     required this.opportunities,
     this.onFavoriteCountChanged,
+    this.isLoading = false,
   });
 
   @override
@@ -108,9 +111,28 @@ class _OpportunityCardState extends State<OpportunityCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ...widget.opportunities.asMap().entries.map((entry) {
+    final displayList =
+        widget.isLoading
+            ? List.generate(
+              3,
+              (index) => Datum(
+                id: index,
+                title: 'Loading Opportunity Title...',
+                overview:
+                    'This is a placeholder description for the skeleton loading state.',
+                price: '000',
+                mentor: Mentor(user: {'name': 'Mentor Name'}),
+                deadLine: DateTime.now(),
+                categories: [Category(name: 'Category')],
+              ),
+            )
+            : widget.opportunities;
+
+    return Skeletonizer(
+      enabled: widget.isLoading,
+      child: Column(
+        children: [
+          ...displayList.asMap().entries.map((entry) {
           final model = entry.value;
           return Padding(
             padding: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
@@ -290,6 +312,7 @@ class _OpportunityCardState extends State<OpportunityCard> {
         }).toList(),
         SizedBox(height: 70.h),
       ],
+    ),
     );
   }
 }
