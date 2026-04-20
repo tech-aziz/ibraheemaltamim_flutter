@@ -74,11 +74,15 @@ class _OpportunityCardState extends State<OpportunityCard> {
     }
   }
 
-  Widget _buildInfoRow(IconData icon, String text, String? price) {
+  Widget _buildInfoRow(IconData icon, String text, String? price, {int? mentorId}) {
     return GestureDetector(
-      onTap: () {
-        NavigationService.navigateTo(Routes.mentorProfileScreen);
-      },
+      onTap: mentorId != null
+          ? () {
+              NavigationService.navigateToWithArgs(Routes.mentorProfileScreen, {
+                "id": mentorId,
+              });
+            }
+          : null,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -267,6 +271,7 @@ class _OpportunityCardState extends State<OpportunityCard> {
                                       'Mentor #${model.mentorId ?? '-'}')
                                 : 'Mentor #${model.mentorId ?? '-'}',
                             model.price?.toString(),
+                            mentorId: model.mentorId,
                           ),
                           SizedBox(height: 8.h),
                           _buildInfoRow(

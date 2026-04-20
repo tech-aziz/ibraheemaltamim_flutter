@@ -88,11 +88,15 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
     }
   }
 
-  Widget _buildInfoRow(IconData icon, String text, String? price) {
+  Widget _buildInfoRow(IconData icon, String text, String? price, {int? mentorId}) {
     return GestureDetector(
-      onTap: () {
-        NavigationService.navigateTo(Routes.mentorProfileScreen);
-      },
+      onTap: mentorId != null
+          ? () {
+              NavigationService.navigateToWithArgs(Routes.mentorProfileScreen, {
+                "id": mentorId,
+              });
+            }
+          : null,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -256,6 +260,7 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
                         Icons.person_outline,
                         'Mentor #${fav?.mentorId ?? '-'}',
                         fav?.price?.toString(),
+                        mentorId: fav?.mentorId,
                       ),
                       SizedBox(height: 8.h),
                       _buildInfoRow(

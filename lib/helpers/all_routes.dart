@@ -215,12 +215,17 @@ final class RouteGenerator {
 
       // ---------- Mentor Profile Screen ----------
       case Routes.mentorProfileScreen:
+        final args = settings.arguments as Map?;
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: MentorProfileScreen(),
+                widget: MentorProfileScreen(mentorId: args?['id']),
                 settings: settings,
               )
-            : CupertinoPageRoute(builder: (context) => MentorProfileScreen());
+            : CupertinoPageRoute(
+                builder: (context) => MentorProfileScreen(
+                  mentorId: args?['id'],
+                ),
+              );
 
       // ---------- Payment Screen ----------
       case Routes.paymentScreen:

@@ -234,7 +234,9 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
         children: [
           GestureDetector(
             onTap: () {
-              NavigationService.navigateTo(Routes.mentorProfileScreen);
+              NavigationService.navigateToWithArgs(Routes.mentorProfileScreen, {
+                "id": data.mentorId,
+              });
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -20,7 +20,9 @@ import 'package:ibraheemaltamim_flutter/features/profile/model/user_info_model.d
 import 'package:ibraheemaltamim_flutter/features/profile/data/rx_privacy_policy/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/data/rx_terms/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/data/rx_update_password/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/model/mentor_details_model.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/model/privacy_policy_model.dart';
+import 'package:ibraheemaltamim_flutter/features/profile/data/rx_mentor_details/rx.dart';
 import 'package:rxdart/subjects.dart';
 
 //_________________Delete Account Api Access ______________________//
@@ -83,6 +85,12 @@ ForgetPasswordRx forgetPasswordRxObj = ForgetPasswordRx(
 UserInfoRx userInfoRxObj = UserInfoRx(
   empty: UserInfoModel(),
   dataFetcher: BehaviorSubject<UserInfoModel>(),
+);
+
+//___________________ Mentor Details Api Access ______________________//
+MentorDetailsRx mentorDetailsRxObj = MentorDetailsRx(
+  empty: MentorDetailsModel(),
+  dataFetcher: BehaviorSubject<MentorDetailsModel>(),
 );
 
 
