@@ -109,6 +109,10 @@ final class Endpoints {
   static String mentorsDetails(String mentorId) => "/api/opportunities/mentors/$mentorId";
   // ------------------- Mentors details end-------------------
 
+  // ------------------- Filter List start-------------------
+  static String filterList() => "/api/opportunities/fillter-list";
+  // ------------------- Filter List end-------------------
+
 //   // -------------------Verify phone start-------------------
 //   static String verifyphone() => "/login/verify-otp";
 //   // -------------------Verify phone end-------------------

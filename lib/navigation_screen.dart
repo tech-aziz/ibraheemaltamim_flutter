@@ -11,6 +11,7 @@ import 'package:ibraheemaltamim_flutter/features/message/presentation/message_sc
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/profile_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/service/presentation/service_screen.dart';
 import 'package:ibraheemaltamim_flutter/helpers/helper_methods.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_list/rx.dart';
 
 final class BottomNavBar extends StatefulWidget {
   final int? pageNum;
@@ -123,6 +124,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
             ],
             currentIndex: _currentIndex,
             onTap: (index) {
+              if (index == 0 && _currentIndex != 0) {
+                // Returning to Home tab — reset filters and reload full list
+                getOpportunitiesRx.fetchOpportunities(
+                  perPage: 15,
+                  isRefresh: true,
+                  filters: null,
+                );
+              }
               setState(() {
                 _currentIndex = index;
               });

@@ -34,7 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     userInfoRxObj.fetchUserInfo();
-    getOpportunitiesRx.fetchOpportunities(perPage: 15, isRefresh: true);
+    // Always reload full unfiltered list when returning to HomeScreen
+    getOpportunitiesRx.fetchOpportunities(perPage: 15, isRefresh: true, filters: null);
     getWishlistRx.fetchWishlist();
   }
 
@@ -71,11 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              UIHelper.verticalSpace(10.h),
+                              UIHelper.verticalSpace(15.h),
                               _buildSearchBar(),
                               SizedBox(height: 20.h),
-                              const WaitingListCard(),
-                              SizedBox(height: 25.h),
+                              // const WaitingListCard(),
+                              // SizedBox(height: 25.h),
                               _buildSectionHeader('Opportunities'),
                               SizedBox(height: 15.h),
                             ],
@@ -84,7 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         StreamBuilder<OpportunityListModel>(
                           stream: getOpportunitiesRx.getFileData,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting ||
+                            if (snapshot.connectionState ==
+                                    ConnectionState.waiting ||
                                 snapshot.data?.data == null) {
                               return const OpportunityCard(
                                 opportunities: [],
@@ -94,18 +96,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             if (snapshot.hasError) {
                               return Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 20.w),
-                                child: Center(child: Text('Error: ${snapshot.error}')),
+                                child: Center(
+                                  child: Text('Error: ${snapshot.error}'),
+                                ),
                               );
                             }
-                            
+
                             final list = snapshot.data?.data ?? [];
                             if (list.isEmpty) {
                               return Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-                                child: const Center(child: Text('No opportunities available.')),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20.w,
+                                  vertical: 20.h,
+                                ),
+                                child: const Center(
+                                  child: Text('No opportunities available.'),
+                                ),
                               );
                             }
-                            
+
                             return OpportunityCard(
                               opportunities: list.take(15).toList(),
                             );
@@ -166,10 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Row(
                 children: [
-                  ProfileAvatar(
-                    imageUrl: user?.avatar,
-                    radius: 25,
-                  ),
+                  ProfileAvatar(imageUrl: user?.avatar, radius: 25),
                   SizedBox(width: 12.w),
                   Text(
                     'Hi, ${user?.name?.split(' ').first ?? 'Guest'}',
@@ -240,8 +246,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           GestureDetector(
-            onTap: () {
-              showDialog(
+            onTap: () async {
+              await showDialog(
                 context: context,
                 builder: (context) {
                   return const FilterDialog();

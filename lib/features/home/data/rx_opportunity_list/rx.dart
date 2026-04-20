@@ -11,23 +11,37 @@ final class OpportunityListRx extends RxResponseInt<OpportunityListModel> {
   List<Datum> _allData = [];
   int _currentPage = 1;
   bool _isFetching = false;
+  Map<String, dynamic>? _lastFilters;
 
   OpportunityListRx({required super.empty, required super.dataFetcher});
 
   ValueStream<OpportunityListModel> get getFileData => dataFetcher.stream;
   bool get hasMoreData => _allData.length < (dataFetcher.value.pagination?.total ?? 0);
 
-  Future<OpportunityListModel?> fetchOpportunities({int perPage = 15, bool isRefresh = true}) async {
+  Future<OpportunityListModel?> fetchOpportunities({
+    int perPage = 15,
+    bool isRefresh = true,
+    Map<String, dynamic>? filters,
+  }) async {
+    // A refresh always cancels any in-progress fetch
+    if (isRefresh) _isFetching = false;
+
     if (_isFetching) return null;
     _isFetching = true;
 
     if (isRefresh) {
       _currentPage = 1;
       _allData.clear();
+      _lastFilters = filters;
+      dataFetcher.sink.add(OpportunityListModel());
     }
 
     try {
-      final data = await api.getOpportunities(page: _currentPage, perPage: perPage);
+      final data = await api.getOpportunities(
+        page: _currentPage,
+        perPage: perPage,
+        filters: _lastFilters,
+      );
       handleSuccessWithReturn(data);
       
       if (data.data != null) {

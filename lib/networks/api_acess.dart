@@ -23,6 +23,8 @@ import 'package:ibraheemaltamim_flutter/features/profile/data/rx_update_password
 import 'package:ibraheemaltamim_flutter/features/profile/model/mentor_details_model.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/model/privacy_policy_model.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/data/rx_mentor_details/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_filter_list/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/filter_list_model.dart';
 import 'package:rxdart/subjects.dart';
 
 //_________________Delete Account Api Access ______________________//
@@ -91,6 +93,37 @@ UserInfoRx userInfoRxObj = UserInfoRx(
 MentorDetailsRx mentorDetailsRxObj = MentorDetailsRx(
   empty: MentorDetailsModel(),
   dataFetcher: BehaviorSubject<MentorDetailsModel>(),
+);
+
+//___________________ Filter List Api Access ______________________//
+FilterListRx filterListRxObj = FilterListRx(
+  empty: FilterListModel(),
+  dataFetcher: BehaviorSubject<FilterListModel>.seeded(FilterListModel()),
+);
+
+FilterListRx studentDesignListRxObj = FilterListRx(
+  empty: FilterListModel(),
+  dataFetcher: BehaviorSubject<FilterListModel>.seeded(FilterListModel()),
+);
+
+FilterListRx contributionListRxObj = FilterListRx(
+  empty: FilterListModel(),
+  dataFetcher: BehaviorSubject<FilterListModel>.seeded(FilterListModel()),
+);
+
+FilterListRx universityHospitalListRxObj = FilterListRx(
+  empty: FilterListModel(),
+  dataFetcher: BehaviorSubject<FilterListModel>.seeded(FilterListModel()),
+);
+
+FilterListRx placeListRxObj = FilterListRx(
+  empty: FilterListModel(),
+  dataFetcher: BehaviorSubject<FilterListModel>.seeded(FilterListModel()),
+);
+
+FilterListRx experienceLevelListRxObj = FilterListRx(
+  empty: FilterListModel(),
+  dataFetcher: BehaviorSubject<FilterListModel>.seeded(FilterListModel()),
 );
 
 
