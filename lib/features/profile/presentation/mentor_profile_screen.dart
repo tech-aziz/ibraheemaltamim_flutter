@@ -83,7 +83,9 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image: _getImageProvider(mentor.user?.avatar ?? ''),
+                                  image: _getImageProvider(
+                                    mentor.user?.avatar ?? '',
+                                  ),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -139,6 +141,25 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 12.h),
+                                  Text(
+                                    mentor.bio ?? 'No bio available',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: const Color(0xFF6B7280),
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                  SizedBox(height: 24.h),
+
+                                  Text(
+                                    'Department',
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w800,
+                                      color: const Color(0xff000066),
+                                    ),
+                                  ),
+                                  SizedBox(height: 12.h),
                                   Container(
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 12.w,
@@ -168,17 +189,6 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 16.h),
-                                  Text(
-                                    mentor.bio ?? 'No bio available',
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: const Color(0xFF6B7280),
-                                      height: 1.5,
-                                    ),
-                                  ),
-                                  SizedBox(height: 24.h),
-
                                   // // Language Section (Hardcoded as not in model yet)
                                   // _buildSectionTitle(
                                   //   Icons.language_outlined,
