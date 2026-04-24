@@ -17,7 +17,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _birthdayController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _isLoading = false;
@@ -194,7 +195,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 name: _nameController.text,
                                 email: _emailController.text,
                                 password: _passwordController.text,
-                                passwordConfirmation: _confirmPasswordController.text,
+                                passwordConfirmation:
+                                    _confirmPasswordController.text,
                               );
 
                               setState(() {
@@ -237,7 +239,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Terms & Privacy Policy row
                 Wrap(
                   alignment: WrapAlignment.center,
@@ -251,7 +253,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        NavigationService.navigateTo(Routes.termsAndConditionScreen);
+                        NavigationService.navigateTo(
+                          Routes.termsAndConditionScreen,
+                        );
                       },
                       child: Text(
                         'Terms & Conditions',
@@ -345,7 +349,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: AppColor.bgColor,
-                    borderRadius: BorderRadius.circular(32.r),
+                    borderRadius: BorderRadius.circular(100.r),
                     border: Border.all(
                       color: state.hasError
                           ? Colors.red
