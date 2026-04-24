@@ -182,56 +182,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: _isLoading
-                        ? null
-                        : () async {
-                            FocusScope.of(context).unfocus();
-                            if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                _isLoading = true;
-                              });
+                    onPressed: () async {
+                      if (_isLoading) return;
+                      FocusScope.of(context).unfocus();
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isLoading = true;
+                        });
 
-                              final result = await registerRxObj.registerRx(
-                                name: _nameController.text,
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                                passwordConfirmation:
-                                    _confirmPasswordController.text,
-                              );
+                        final result = await registerRxObj.registerRx(
+                          name: _nameController.text,
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                          passwordConfirmation: _confirmPasswordController.text,
+                        );
 
-                              setState(() {
-                                _isLoading = false;
-                              });
+                        setState(() {
+                          _isLoading = false;
+                        });
 
-                              if (result != null) {
-                                NavigationService.navigateToWithArgs(
-                                  Routes.registerOtpVerificationScreen,
-                                  {"email": _emailController.text},
-                                );
-                              }
-                            }
-                          },
+                        if (result != null) {
+                          NavigationService.navigateToWithArgs(
+                            Routes.registerOtpVerificationScreen,
+                            {"email": _emailController.text},
+                          );
+                        }
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColor.darkNavy,
-                      foregroundColor: Colors.white,
+                      // foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(32),
                       ),
                     ),
                     child: _isLoading
-                        ? SizedBox(
-                            width: 20.w,
-                            height: 20.w,
-                            child: const CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
+                        ? const SizedBox(
+                            child: CircularProgressIndicator(
+                              color: AppColor.bgColor,
+                              // strokeWidth: 2,
                             ),
                           )
                         : Text(
                             'Next',
                             style: TextStyle(
-                              fontSize: 15.sp,
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
                             ),

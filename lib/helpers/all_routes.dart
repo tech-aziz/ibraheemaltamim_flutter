@@ -186,12 +186,16 @@ final class RouteGenerator {
         final id = settings.arguments as Map?;
         return Platform.isAndroid
             ? _FadedTransitionRoute(
-                widget: OpportunityDetailScreen(opportunityId: id?['id']),
+                widget: OpportunityDetailScreen(
+                  opportunityId: id?['id'],
+                  favouriteId: id?['favouriteId'],
+                ),
                 settings: settings,
               )
             : CupertinoPageRoute(
                 builder: (context) => OpportunityDetailScreen(
                   opportunityId: id?['id'],
+                  favouriteId: id?['favouriteId'],
                 ),
               );
 

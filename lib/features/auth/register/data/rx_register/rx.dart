@@ -38,13 +38,9 @@ final class RegisterRx extends RxResponseInt<RegisterModel> {
   @override
   handleErrorWithReturn(dynamic error) {
     if (error is DioException) {
-      final statusCode = error.response?.statusCode;
       final responseData = error.response?.data;
-      if ((statusCode == 422 || statusCode == 401) &&
-          responseData is Map<String, dynamic>) {
-        if (responseData['message'] != null) {
-          ToastUtil.showShortToast(responseData['message']);
-        }
+      if (responseData is Map<String, dynamic> && responseData['message'] != null) {
+        ToastUtil.showShortToast(responseData['message'].toString());
       } else {
          ToastUtil.showShortToast(error.message ?? "An error occurred");
       }

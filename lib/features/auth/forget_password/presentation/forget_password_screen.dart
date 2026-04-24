@@ -209,8 +209,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                 elevation: 0,
                               ),
                               child: _isLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white,
+                                  ? const SizedBox(
+                                      child: CircularProgressIndicator(
+                                        color: AppColor.bgColor,
+                                        // strokeWidth: 2,
+                                      ),
                                     )
                                   : const Text(
                                       'Send Code',

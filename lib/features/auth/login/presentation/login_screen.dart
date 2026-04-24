@@ -291,8 +291,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   elevation: 0,
                                 ),
                                 child: _isLoading
-                                    ? const CircularProgressIndicator(
-                                        color: Colors.white,
+                                    ? SizedBox(
+                                        child: const CircularProgressIndicator(
+                                          color: AppColor.bgColor,
+
+                                          // strokeWidth: 2,
+                                        ),
                                       )
                                     : const Text(
                                         'Log In',

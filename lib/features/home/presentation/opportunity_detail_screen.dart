@@ -8,15 +8,16 @@ import 'package:ibraheemaltamim_flutter/helpers/all_routes.dart';
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
 import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_favourite_details/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_details/rx.dart';
-import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_details_model.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_details_model.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class OpportunityDetailScreen extends StatefulWidget {
   final int? opportunityId;
-  const OpportunityDetailScreen({super.key, this.opportunityId});
+  final int? favouriteId;
+  const OpportunityDetailScreen({super.key, this.opportunityId, this.favouriteId});
 
   @override
   State<OpportunityDetailScreen> createState() =>
@@ -27,7 +28,11 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.opportunityId != null) {
+    getFavouriteDetailsRx.clean();
+    getOpportunityDetailsRx.clean();
+    if (widget.favouriteId != null) {
+      getFavouriteDetailsRx.fetchDetails(widget.favouriteId.toString());
+    } else if (widget.opportunityId != null) {
       getOpportunityDetailsRx.fetchDetails(widget.opportunityId.toString());
     }
   }
@@ -58,7 +63,9 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
             // ------------ details information start--------
             Expanded(
               child: StreamBuilder<OpportunityDetailsModel>(
-                stream: getOpportunityDetailsRx.getFileData,
+                stream: widget.favouriteId != null
+                    ? getFavouriteDetailsRx.getFileData
+                    : getOpportunityDetailsRx.getFileData,
                 builder: (context, snapshot) {
                   final isLoading =
                       snapshot.connectionState == ConnectionState.waiting ||

@@ -265,8 +265,11 @@ class _SetNewPasswordScreenState extends State<SetNewPasswordScreen> {
                                 elevation: 0,
                               ),
                               child: _isLoading
-                                  ? const CircularProgressIndicator(
-                                      color: Colors.white,
+                                  ? const SizedBox(
+                                      child: CircularProgressIndicator(
+                                        color: AppColor.bgColor,
+                                        // strokeWidth: 2,
+                                      ),
                                     )
                                   : const Text(
                                       'Continue',

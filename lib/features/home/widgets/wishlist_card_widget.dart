@@ -27,11 +27,9 @@ class WishlistCardWidget extends StatefulWidget {
 }
 
 class _WishlistCardWidgetState extends State<WishlistCardWidget> {
-
-  
   Future<void> _toggleFavorite(int index) async {
     final model = widget.wishLists[index];
-    
+
     // Fallback ID checking using fav object if parent id isn't populated
     final favId = model.id?.toString();
     if (favId != null && favId.isNotEmpty) {
@@ -40,14 +38,13 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
         context: context,
         barrierDismissible: false,
         barrierColor: Colors.black.withOpacity(0.3),
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(color: Colors.white),
-        ),
+        builder: (context) =>
+            const Center(child: CircularProgressIndicator(color: Colors.white)),
       );
 
       // Execute the API hook
       final success = await removeFavouriteRx.deleteFavourite(favId);
-      
+
       // Close the loader
       if (mounted) Navigator.pop(context);
 
@@ -57,7 +54,10 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
       }
     } else {
       // Local state fallback if needed
-      Provider.of<WishlistProvider>(context, listen: false).toggleFavorite(index);
+      Provider.of<WishlistProvider>(
+        context,
+        listen: false,
+      ).toggleFavorite(index);
 
       if (widget.onFavoriteCountChanged != null) {
         final provider = Provider.of<WishlistProvider>(context, listen: false);
@@ -68,27 +68,34 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
 
   ImageProvider _getImageProvider(String imageUrlPath) {
     final String cleanUrl = imageUrlPath.trim();
-    
+
     if (cleanUrl.isEmpty) {
       return const AssetImage('assets/images/img1.png');
     }
-    
+
     if (cleanUrl.toLowerCase().contains('assets/') ||
         cleanUrl.toLowerCase().contains('assets\\\\')) {
       int index = cleanUrl.toLowerCase().indexOf('assets');
       String assetPath = cleanUrl.substring(index);
       return AssetImage(assetPath);
     }
-    
+
     if (cleanUrl.startsWith('http')) {
       return NetworkImage(cleanUrl);
     } else {
-      String fullUrl = cleanUrl.startsWith('/') ? "$imageUrl$cleanUrl" : "$imageUrl/$cleanUrl";
+      String fullUrl = cleanUrl.startsWith('/')
+          ? "$imageUrl$cleanUrl"
+          : "$imageUrl/$cleanUrl";
       return NetworkImage(fullUrl);
     }
   }
 
-  Widget _buildInfoRow(IconData icon, String text, String? price, {int? mentorId}) {
+  Widget _buildInfoRow(
+    IconData icon,
+    String text,
+    String? price, {
+    int? mentorId,
+  }) {
     return GestureDetector(
       onTap: mentorId != null
           ? () {
@@ -129,24 +136,23 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final displayList =
-        widget.isLoading
-            ? List.generate(
-              3,
-              (index) => Datum(
-                id: index,
-                favouriteableType: 'Loading\\\\Opportunity',
-                favouriteable: Favouriteable(
-                  title: 'Loading Favorite Title...',
-                  overview:
-                      'This is a placeholder for the wishlist skeleton loading state.',
-                  price: '000',
-                  mentorId: 0,
-                  deadLine: DateTime.now(),
-                ),
+    final displayList = widget.isLoading
+        ? List.generate(
+            3,
+            (index) => Datum(
+              id: index,
+              favouriteableType: 'Loading\\\\Opportunity',
+              favouriteable: Favouriteable(
+                title: 'Loading Favorite Title...',
+                overview:
+                    'This is a placeholder for the wishlist skeleton loading state.',
+                price: '000',
+                mentorId: 0,
+                deadLine: DateTime.now(),
               ),
-            )
-            : widget.wishLists;
+            ),
+          )
+        : widget.wishLists;
 
     return Skeletonizer(
       enabled: widget.isLoading,
@@ -156,154 +162,164 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
           final fav = model.favouriteable;
           final categoryDisplay =
               model.favouriteableType?.split('\\\\').last ?? 'General';
-        
-        return Padding(
-          padding: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
+
+          return Padding(
+            padding: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
+            child: GestureDetector(
+              onTap: () {
+                NavigationService.navigateTo(
+                  Routes.opportunityDetail,
+                  arguments: {'favouriteId': model.id},
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20.r),
-                      ),
-                      child: Image(
-                        image: _getImageProvider(fav?.thumbnail?.toString() ?? ''),
-                        height: 180.h,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.asset(
-                            'assets/images/img1.png',
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20.r),
+                          ),
+                          child: Image(
+                            image: _getImageProvider(
+                              fav?.thumbnail?.toString() ?? '',
+                            ),
                             height: 180.h,
                             width: double.infinity,
                             fit: BoxFit.cover,
-                          );
-                        },
-                      ),
+                            errorBuilder: (context, error, stackTrace) {
+                              return Image.asset(
+                                'assets/images/img1.png',
+                                height: 180.h,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              );
+                            },
+                          ),
+                        ),
+                        Positioned(
+                          top: 15.h,
+                          left: 15.w,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 5.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xff00E5FF),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Text(
+                              categoryDisplay,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          top: 15.h,
+                          right: 15.w,
+                          child: GestureDetector(
+                            onTap: () => _toggleFavorite(entry.key),
+                            child: Container(
+                              padding: EdgeInsets.all(8.w),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                                size: 20.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Positioned(
-                      top: 15.h,
-                      left: 15.w,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 5.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xff00E5FF),
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: Text(
-                          categoryDisplay,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: EdgeInsets.all(20.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            fav?.title ?? 'No Title',
+                            style: TextStyle(
+                              color: AppColor.textColor,
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 15.h,
-                      right: 15.w,
-                      child: GestureDetector(
-                        onTap: () => _toggleFavorite(entry.key),
-                        child: Container(
-                          padding: EdgeInsets.all(8.w),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
+                          SizedBox(height: 10.h),
+                          Text(
+                            fav?.overview ?? 'No description available',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14.sp,
+                              height: 1.4,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          child: Icon(
-                            Icons.favorite,
-                            color: Colors.red,
-                            size: 20.sp,
+                          SizedBox(height: 15.h),
+                          _buildInfoRow(
+                            Icons.person_outline,
+                            'Mentor #${fav?.mentorId ?? '-'}',
+                            fav?.price?.toString(),
+                            mentorId: fav?.mentorId,
                           ),
-                        ),
+                          SizedBox(height: 8.h),
+                          _buildInfoRow(
+                            Icons.calendar_month_outlined,
+                            'Deadline: ${fav?.deadLine?.toIso8601String().split('T').first ?? '-'}',
+                            null,
+                          ),
+                          SizedBox(height: 20.h),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                NavigationService.navigateTo(
+                                  Routes.opportunityDetail,
+                                  arguments: {'id': model.favouriteableId},
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xff000066),
+                                padding: EdgeInsets.symmetric(vertical: 15.h),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.r),
+                                ),
+                              ),
+                              child: Text(
+                                'Apply Now',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.all(20.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        fav?.title ?? 'No Title',
-                        style: TextStyle(
-                          color: AppColor.textColor,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        fav?.overview ?? 'No description available',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14.sp,
-                          height: 1.4,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 15.h),
-                      _buildInfoRow(
-                        Icons.person_outline,
-                        'Mentor #${fav?.mentorId ?? '-'}',
-                        fav?.price?.toString(),
-                        mentorId: fav?.mentorId,
-                      ),
-                      SizedBox(height: 8.h),
-                      _buildInfoRow(
-                        Icons.calendar_month_outlined,
-                        'Deadline: ${fav?.deadLine?.toIso8601String().split('T').first ?? '-'}',
-                        null,
-                      ),
-                      SizedBox(height: 20.h),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            NavigationService.navigateTo(
-                              Routes.opportunityDetail,
-                              arguments: {'id': model.favouriteableId},
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff000066),
-                            padding: EdgeInsets.symmetric(vertical: 15.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.r),
-                            ),
-                          ),
-                          child: Text(
-                            'Apply Now',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        );
-      }).toList(),
-    ),
+          );
+        }).toList(),
+      ),
     );
   }
 }
