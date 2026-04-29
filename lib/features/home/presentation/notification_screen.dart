@@ -48,7 +48,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              setState(() {
+                _isSelectionMode = false;
+              });
+            },
             child: Text(
               'No',
               style: TextStyle(
@@ -69,7 +74,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 // Clear local list immediately
                 getAllNotificationListRxObj.clearAll();
                 setState(() {
-                  _deletedMessage = result.message ?? 'All notifications deleted.';
+                  _deletedMessage =
+                      result.message ?? 'All notifications deleted.';
                 });
               }
             },
@@ -270,8 +276,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
     return Dismissible(
       key: Key(datum.id.toString()),
-      direction:
-          _isSelectionMode ? DismissDirection.none : DismissDirection.endToStart,
+      direction: _isSelectionMode
+          ? DismissDirection.none
+          : DismissDirection.endToStart,
       onDismissed: (direction) {
         if (datum.id != null) {
           final deletedId = datum.id!;
@@ -341,18 +348,60 @@ class _NotificationScreenState extends State<NotificationScreen> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.all(10.w),
-                decoration: BoxDecoration(
-                  color: _isSelectionMode ? Colors.red.withOpacity(0.15) : iconBg,
-                  shape: BoxShape.circle,
+              if (_isSelectionMode)
+                Container(
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.check_circle,
+                    color: Colors.red,
+                    size: 24.sp,
+                  ),
+                )
+              else if (notificationData?.image != null &&
+                  notificationData!.image!.isNotEmpty)
+                ClipOval(
+                  child: Image.network(
+                    notificationData.image!,
+                    width: 44.w,
+                    height: 44.w,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Skeletonizer(
+                        enabled: true,
+                        child: Container(
+                          width: 44.w,
+                          height: 44.w,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                        color: iconBg,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(icon, color: iconColor, size: 24.sp),
+                    ),
+                  ),
+                )
+              else
+                Container(
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    color: iconBg,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, color: iconColor, size: 24.sp),
                 ),
-                child: Icon(
-                  _isSelectionMode ? Icons.check_circle : icon,
-                  color: _isSelectionMode ? Colors.red : iconColor,
-                  size: 24.sp,
-                ),
-              ),
               SizedBox(width: 15.w),
               Expanded(
                 child: Column(
@@ -392,47 +441,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                     ),
                     SizedBox(height: 12.h),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 6.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFD1F1F9),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Text(
-                        category,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: const Color(0xFF0077B6),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
+
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           datum.createdAt != null
-                              ? 'Created At : ${DateFormat('EEE MMM d h:mma').format(datum.createdAt!)}'
+                              ? DateFormat(
+                                  'EEE MMM d h:mma',
+                                ).format(datum.createdAt!)
                               : '',
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: Colors.grey[400],
                           ),
                         ),
-                        if (datum.readAt != null) ...[
-                          SizedBox(height: 5.h),
-                          Text(
-                            'Read At : ${DateFormat('EEE MMM d h:mma').format(DateTime.tryParse(datum.readAt.toString()) ?? DateTime.now())}',
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                        ],
                       ],
                     ),
                   ],
