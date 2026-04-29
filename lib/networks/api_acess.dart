@@ -25,6 +25,13 @@ import 'package:ibraheemaltamim_flutter/features/profile/model/privacy_policy_mo
 import 'package:ibraheemaltamim_flutter/features/profile/data/rx_mentor_details/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_filter_list/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/filter_list_model.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_get_notification/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/get_all_notification_list_model.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_delete_single_notification/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/delete_single_notification_model.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_mark_as_read/rx.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/mark_as_read_model.dart';
+import 'package:ibraheemaltamim_flutter/features/home/data/rx_delete_all_notifications/rx.dart';
 import 'package:rxdart/subjects.dart';
 
 //_________________Delete Account Api Access ______________________//
@@ -124,6 +131,27 @@ FilterListRx placeListRxObj = FilterListRx(
 FilterListRx experienceLevelListRxObj = FilterListRx(
   empty: FilterListModel(),
   dataFetcher: BehaviorSubject<FilterListModel>.seeded(FilterListModel()),
+);
+
+//___________________ Notification List Api Access ______________________//
+GetAllNotificationListRx getAllNotificationListRxObj = GetAllNotificationListRx(
+  empty: GetAllNotificationListModel(),
+  dataFetcher: BehaviorSubject<GetAllNotificationListModel>(),
+);
+
+DeleteSingleNotificationRx deleteSingleNotificationRxObj = DeleteSingleNotificationRx(
+  empty: DeleteSingleNotificationModel(),
+  dataFetcher: BehaviorSubject<DeleteSingleNotificationModel>(),
+);
+
+MarkAsReadRx markAsReadRxObj = MarkAsReadRx(
+  empty: MarkAsReadModel(),
+  dataFetcher: BehaviorSubject<MarkAsReadModel>(),
+);
+
+DeleteAllNotificationsRx deleteAllNotificationsRxObj = DeleteAllNotificationsRx(
+  empty: DeleteSingleNotificationModel(),
+  dataFetcher: BehaviorSubject<DeleteSingleNotificationModel>(),
 );
 
 

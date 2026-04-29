@@ -8,6 +8,8 @@ import 'package:ibraheemaltamim_flutter/features/auth/otp/presentation/forget_pa
 import 'package:ibraheemaltamim_flutter/features/home/presentation/all_opportunities_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/notification_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/home/presentation/notification_details_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/home/model/get_all_notification_list_model.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/opportunity_detail_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/wishlist_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/navbar.dart';
@@ -74,6 +76,8 @@ final class Routes {
       '/forgetPasswordOtpVerificationScreen';
   // ---------- Change Password Screen ----------
   static const String changePasswordScreen = '/changePasswordScreen';
+  // ---------- Notification Details Screen ----------
+  static const String notificationDetailsScreen = '/notificationDetailsScreen';
 }
 
 final class RouteGenerator {
@@ -207,6 +211,19 @@ final class RouteGenerator {
                 settings: settings,
               )
             : CupertinoPageRoute(builder: (context) => NotificationScreen());
+
+      // ---------- Notification Details Screen ----------
+      case Routes.notificationDetailsScreen:
+        final datum = settings.arguments as Datum;
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: NotificationDetailsScreen(notification: datum),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) =>
+                    NotificationDetailsScreen(notification: datum),
+              );
 
       // ---------- Edit Profile Screen ----------
       case Routes.editProfileScreen:

@@ -116,4 +116,20 @@ final class Endpoints {
   static String filterList() => "/api/opportunities/fillter-list";
   // ------------------- Filter List end-------------------
 
+  // ------------------- Notifications List start-------------------
+  static String notificationsList() => "/api/my-notifications";
+  // ------------------- Notifications List end-------------------
+
+  // ------------------- Delete Notifications start-------------------
+  static String deleteNotifications(String notificationId) => "/api/my-notifications-delete/$notificationId";
+  // ------------------- Delete Notifications end-------------------
+
+  // ------------------- Mark as Read Notifications start-------------------
+  static String markAsReadNotifications() => "/api/my-notifications/mark-as-read";
+  // ------------------- Mark as Read Notifications end-------------------
+
+
+  // ------------------- Delete All Notifications start-------------------
+  static String deleteAllNotifications() => "/api/my-notifications-delete-all";
+  // ------------------- Delete All Notifications end-------------------
 }
