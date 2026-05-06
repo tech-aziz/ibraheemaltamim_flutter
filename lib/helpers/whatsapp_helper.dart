@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 
 Future<void> launchWhatsApp({
   required BuildContext context,
-  String phoneNumber = "+8801789398972",
+  String? phoneNumber,
   String message = "Hello, I'm interested in the opportunity.",
 }) async {
+  String number = phoneNumber ?? 
+      whatsAppCallRxObj.dataFetcher.valueOrNull?.data?.whatsappNumber ?? 
+      "+8801789398972";
+
+  // Ensure number is properly formatted for WhatsApp
+  number = number.replaceAll(RegExp(r'[^\d+]'), '');
   final whatsappUrl = Uri.parse(
-    "whatsapp://send?phone=$phoneNumber&text=${Uri.encodeComponent(message)}",
+    "whatsapp://send?phone=$number&text=${Uri.encodeComponent(message)}",
   );
   final webUrl = Uri.parse(
-    "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}",
+    "https://wa.me/$number?text=${Uri.encodeComponent(message)}",
   );
 
   try {

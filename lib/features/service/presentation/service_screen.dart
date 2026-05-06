@@ -8,6 +8,7 @@ import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
 import 'package:ibraheemaltamim_flutter/features/service/data/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/service/model/service_model.dart';
 import 'package:ibraheemaltamim_flutter/features/service/widgets/service_card_widget.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 
 
 class ServiceScreen extends StatefulWidget {
@@ -42,6 +43,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
   void initState() {
     super.initState();
     getServicesRx.fetchServices();
+    whatsAppCallRxObj.fetchWhatsAppCall();
   }
 
   @override

@@ -132,4 +132,24 @@ final class Endpoints {
   // ------------------- Delete All Notifications start-------------------
   static String deleteAllNotifications() => "/api/my-notifications-delete-all";
   // ------------------- Delete All Notifications end-------------------
+
+  // ------------------- Chats start-------------------
+  static String chatList() => "/api/researcher/chats";
+  // ------------------- Chats end-------------------
+
+
+  // ------------------- Chats Details start-------------------
+  static String chatListDetails(String chatId) => "/api/researcher/chats/$chatId";
+  // ------------------- Chats Details end-------------------
+
+
+  // ------------------- Chats Message Details start-------------------
+  static String sendMessage(String chatId) => "/api/researcher/chats/$chatId/messages";
+  // ------------------- Chats Message Details end-------------------
+
+  // ------------------- WhatsApp Number and Call start-------------------
+  static String whatsAppNumberCall() => "/api/system-info";
+  // ------------------- WhatsApp Number and Call end-------------------
+
+
 }

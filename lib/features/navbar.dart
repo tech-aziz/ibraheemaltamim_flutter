@@ -3,10 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
 import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
-import 'package:ibraheemaltamim_flutter/features/message/presentation/message_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/message/presentation/chat_list_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/profile_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/service/presentation/service_screen.dart';
 import 'package:ibraheemaltamim_flutter/helpers/helper_methods.dart';
+import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
+import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 
 class Navbar extends StatefulWidget {
   final int? pageNum;
@@ -24,12 +26,13 @@ class _NavbarState extends State<Navbar> {
     if (widget.pageNum != null) {
       _selectedIndex = widget.pageNum!;
     }
+    whatsAppCallRxObj.fetchWhatsAppCall();
   }
 
   final List<Widget> _screens = [
     HomeScreen(),
     ServiceScreen(),
-    MessageScreen(),
+    ChatListScreen(),
     ProfileScreen(),
   ];
 
@@ -142,6 +145,35 @@ class _NavbarState extends State<Navbar> {
                         ],
                       );
                     }),
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 20.w,
+                bottom: 105.h,
+                child: GestureDetector(
+                  onTap: () => launchWhatsApp(context: context),
+                  child: Container(
+                    width: 60.w,
+                    height: 60.w,
+                    decoration: BoxDecoration(
+                      color: const Color(0xff000066),
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        'assets/images/whatapp_icon.png',
+                        width: 30.w,
+                        height: 30.w,
+                      ),
+                    ),
                   ),
                 ),
               ),
