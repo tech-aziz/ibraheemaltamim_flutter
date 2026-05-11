@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:ibraheemaltamim_flutter/features/message/model/send_message_model.dart';
 import 'package:ibraheemaltamim_flutter/networks/dio/dio.dart';
@@ -22,8 +25,36 @@ final class SendMessageApi {
         formData.fields.add(MapEntry('message', message));
       }
       if (file != null && file.path.isNotEmpty) {
+        final fileExtension = file.path.split('.').last;
+        log('==== SENDING VOICE/FILE ====');
+        log('File path: ${file.path}');
+        log('File extension: $fileExtension');
+        log('============================');
+        MediaType? mediaType;
+        if ([
+          'mp3',
+          'wav',
+          'ogg',
+          'm4a',
+          'aac',
+          'webm',
+        ].contains(fileExtension.toLowerCase())) {
+          mediaType = MediaType(
+            'audio',
+            fileExtension.toLowerCase() == 'm4a'
+                ? 'mp4'
+                : fileExtension.toLowerCase(),
+          );
+        }
         formData.files.add(
-          MapEntry('file', await MultipartFile.fromFile(file.path)),
+          MapEntry(
+            'file',
+            await MultipartFile.fromFile(
+              file.path,
+              filename: file.path.split('/').last,
+              contentType: mediaType,
+            ),
+          ),
         );
       }
 

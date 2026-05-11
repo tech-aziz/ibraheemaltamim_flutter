@@ -316,7 +316,7 @@ class Message {
     int? id;
     int? chatId;
     int? userId;
-    String? message;
+    String? message; 
     dynamic file;
     DateTime? seenAt;
     DateTime? createdAt;

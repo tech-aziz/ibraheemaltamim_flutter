@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ibraheemaltamim_flutter/features/auth/login/presentation/login_screen.dart';
-import 'package:ibraheemaltamim_flutter/features/home/presentation/home_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/navbar.dart';
 import 'package:ibraheemaltamim_flutter/helpers/helper_methods.dart';
 import 'package:ibraheemaltamim_flutter/onboarding_screen.dart';

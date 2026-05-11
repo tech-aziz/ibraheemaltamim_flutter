@@ -7,7 +7,7 @@ import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/wish_list_model.dart';
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_wishlist/rx.dart';
 import 'package:ibraheemaltamim_flutter/helpers/ui_helpers.dart';
-import 'package:shimmer/shimmer.dart';
+
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -52,34 +52,59 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   child: StreamBuilder<WishListModel>(
                     stream: getWishlistRx.getFileData,
                     builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting ||
-                          snapshot.data?.data == null) {
-                        return const WishlistCardWidget(
-                          wishLists: [],
-                          isLoading: true,
-                        );
-                      }
                       if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting ||
+                          snapshot.data?.data == null) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              UIHelper.verticalSpace(10.h),
+                              const WishlistCardWidget(
+                                wishLists: [],
+                                isLoading: true,
+                              ),
+                            ],
+                          ),
+                        );
                       }
                       
                       final dataList = snapshot.data?.data ?? [];
                       if (dataList.isEmpty) {
-                        return const Center(child: Text('No favorites found.'));
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            await getWishlistRx.fetchWishlist();
+                          },
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.7,
+                              child: const Center(child: Text('No favorites found.')),
+                            ),
+                          ),
+                        );
                       }
 
-                      return SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            UIHelper.verticalSpace(10.h),
-                            WishlistCardWidget(
-                              wishLists: dataList,
-                              onFavoriteCountChanged: (count) {
-                                // Local handling or ignored
-                              },
-                            ),
-                          ],
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          await getWishlistRx.fetchWishlist();
+                        },
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              UIHelper.verticalSpace(10.h),
+                              WishlistCardWidget(
+                                wishLists: dataList,
+                                onFavoriteCountChanged: (count) {
+                                  // Local handling or ignored
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

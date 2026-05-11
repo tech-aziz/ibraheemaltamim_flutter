@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 import 'package:dart_pusher_channels/dart_pusher_channels.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,10 @@ import 'dart:io';
 import 'package:ibraheemaltamim_flutter/helpers/toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:record/record.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:ibraheemaltamim_flutter/features/message/presentation/widgets/audio_player_widget.dart';
 
 class MessageScreen extends StatefulWidget {
   final String chatId;
@@ -26,7 +31,10 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   TextEditingController messageController = TextEditingController();
   File? _selectedFilePath;
+  File? _selectedVoiceFile;
   bool _isSending = false;
+  final _audioRecorder = AudioRecorder();
+  bool _isRecording = false;
   StreamSubscription? _chatSubscription;
   StreamSubscription<ChannelReadEvent>? subscription;
   PusherChannelsClient? client;
@@ -100,6 +108,7 @@ class _MessageScreenState extends State<MessageScreen> {
     _chatSubscription?.cancel();
     client?.disconnect();
     messageController.dispose();
+    _audioRecorder.dispose();
     super.dispose();
   }
 
@@ -120,8 +129,6 @@ class _MessageScreenState extends State<MessageScreen> {
         });
   }
 
-  //
-
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -141,25 +148,82 @@ class _MessageScreenState extends State<MessageScreen> {
     }
   }
 
+  Future<void> _toggleRecording() async {
+    if (_isRecording) {
+      // Stop recording
+      final path = await _audioRecorder.stop();
+      if (path != null) {
+        final file = File(path);
+        final size = await file.length();
+        if (size == 0) {
+          setState(() {
+            _isRecording = false;
+          });
+          ToastUtil.showShortToast(
+            "Recording failed: File is 0 bytes (Mic issue?)",
+          );
+          return;
+        }
+        setState(() {
+          _isRecording = false;
+          _selectedVoiceFile = file;
+          _selectedFilePath = null; // Clear other attachment
+        });
+        debugPrint(
+          "Recorded voice saved to: ${_selectedVoiceFile?.path} (Size: $size bytes)",
+        );
+      }
+    } else {
+      // Check and request permission
+      if (await Permission.microphone.request().isGranted) {
+        // Start recording
+        final tempDir = await getTemporaryDirectory();
+        final filePath =
+            '${tempDir.path}/voice_message_${DateTime.now().millisecondsSinceEpoch}.webm';
+
+        await _audioRecorder.start(
+          const RecordConfig(encoder: AudioEncoder.opus),
+          path: filePath,
+        );
+        setState(() {
+          _isRecording = true;
+          // Clear previous selection if recording a new one
+          _selectedVoiceFile = null;
+        });
+      } else {
+        ToastUtil.showShortToast("Microphone permission denied");
+      }
+    }
+  }
+
   Future<void> _sendMessage() async {
+    if (_isRecording) {
+      await _toggleRecording();
+    }
+
     final message = messageController.text.trim();
-    if (message.isEmpty && _selectedFilePath == null) return;
+    if (message.isEmpty &&
+        _selectedFilePath == null &&
+        _selectedVoiceFile == null)
+      return;
 
     setState(() {
       _isSending = true;
     });
 
     try {
+      final fileToSend = _selectedFilePath ?? _selectedVoiceFile;
       final success = await sendMessageRxObj.sendMessage(
         chatId: widget.chatId,
         message: message,
-        file: _selectedFilePath,
+        file: fileToSend,
       );
 
       if (success != null) {
         messageController.clear();
         setState(() {
           _selectedFilePath = null;
+          _selectedVoiceFile = null;
         });
         // Refresh chat list after sending message
         chatShowRxObj.fetchChatShow(chatId: widget.chatId);
@@ -309,9 +373,9 @@ class _MessageScreenState extends State<MessageScreen> {
     final currentUserId = userInfoRxObj.dataFetcher.valueOrNull?.data?.id;
     bool isMe = message.userId == currentUserId;
 
-    final displayTime = message.createdAt;
+    final displayTime = message.createdAt?.toLocal();
     final time = displayTime != null
-        ? "${displayTime.hour.toString().padLeft(2, '0')}:${displayTime.minute.toString().padLeft(2, '0')}"
+        ? DateFormat('hh:mm a').format(displayTime)
         : "";
 
     final senderName = message.user?.name ?? 'Unknown';
@@ -452,9 +516,9 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   Widget _buildFilePreview(String fileUrl, bool isMe) {
-    final isImage = fileUrl.toLowerCase().contains(
-      RegExp(r'\.(jpg|jpeg|png|gif|webp)$'),
-    );
+    final lowerUrl = fileUrl.toLowerCase();
+    final isImage = lowerUrl.contains(RegExp(r'\.(jpg|jpeg|png|gif|webp)$'));
+    final isAudio = lowerUrl.contains(RegExp(r'\.(wav|mp3|m4a|aac|ogg|webm)$'));
 
     if (isImage) {
       return ClipRRect(
@@ -473,6 +537,8 @@ class _MessageScreenState extends State<MessageScreen> {
               _buildFilePlaceholder(fileUrl, isMe),
         ),
       );
+    } else if (isAudio) {
+      return AudioPlayerWidget(audioUrl: fileUrl, isMe: isMe);
     } else {
       return _buildFilePlaceholder(fileUrl, isMe);
     }
@@ -542,6 +608,8 @@ class _MessageScreenState extends State<MessageScreen> {
           children: [
             Row(
               children: [
+                SizedBox(width: 12.w),
+
                 GestureDetector(
                   onTap: _pickFile,
                   child: Icon(
@@ -549,6 +617,20 @@ class _MessageScreenState extends State<MessageScreen> {
                     color: _selectedFilePath != null
                         ? Colors.blue
                         : const Color(0xFF8896A6),
+                    size: 26.sp,
+                  ),
+                ),
+
+                SizedBox(width: 12.w),
+                GestureDetector(
+                  onTap: _toggleRecording,
+                  child: Icon(
+                    _isRecording ? Icons.stop_circle_outlined : Icons.mic_none,
+                    color: _isRecording
+                        ? Colors.red
+                        : (_selectedVoiceFile != null
+                              ? Colors.blue
+                              : const Color(0xFF8896A6)),
                     size: 26.sp,
                   ),
                 ),

@@ -141,7 +141,7 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
             3,
             (index) => Datum(
               id: index,
-              favouriteableType: 'Loading\\\\Opportunity',
+              favouriteableType: 'Loading\\Opportunity',
               favouriteable: Favouriteable(
                 title: 'Loading Favorite Title...',
                 overview:
@@ -157,168 +157,171 @@ class _WishlistCardWidgetState extends State<WishlistCardWidget> {
     return Skeletonizer(
       enabled: widget.isLoading,
       child: Column(
-        children: displayList.asMap().entries.map((entry) {
-          final model = entry.value;
-          final fav = model.favouriteable;
-          final categoryDisplay =
-              model.favouriteableType?.split('\\\\').last ?? 'General';
+        children: [
+          ...displayList.asMap().entries.map((entry) {
+            final model = entry.value;
+            final fav = model.favouriteable;
+            final categoryDisplay =
+                model.favouriteableType?.split('\\').last ?? 'General';
 
-          return Padding(
-            padding: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
-            child: GestureDetector(
-              onTap: () {
-                NavigationService.navigateTo(
-                  Routes.opportunityDetail,
-                  arguments: {'favouriteId': model.id},
-                );
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20.r),
-                          ),
-                          child: Image(
-                            image: _getImageProvider(
-                              fav?.thumbnail?.toString() ?? '',
-                            ),
-                            height: 180.h,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Image.asset(
-                                'assets/images/img1.png',
-                                height: 180.h,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
-                        ),
-                        Positioned(
-                          top: 15.h,
-                          left: 15.w,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                              vertical: 5.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xff00E5FF),
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            child: Text(
-                              categoryDisplay,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 15.h,
-                          right: 15.w,
-                          child: GestureDetector(
-                            onTap: () => _toggleFavorite(entry.key),
-                            child: Container(
-                              padding: EdgeInsets.all(8.w),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                                size: 20.sp,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            return Padding(
+              padding: EdgeInsets.only(bottom: 20.h, left: 20.w, right: 20.w),
+              child: GestureDetector(
+                onTap: () {
+                  NavigationService.navigateTo(
+                    Routes.opportunityDetail,
+                    arguments: {'favouriteId': model.id},
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(
                         children: [
-                          Text(
-                            fav?.title ?? 'No Title',
-                            style: TextStyle(
-                              color: AppColor.textColor,
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
+                          ClipRRect(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20.r),
                             ),
-                          ),
-                          SizedBox(height: 10.h),
-                          Text(
-                            fav?.overview ?? 'No description available',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14.sp,
-                              height: 1.4,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 15.h),
-                          _buildInfoRow(
-                            Icons.person_outline,
-                            'Mentor #${fav?.mentorId ?? '-'}',
-                            fav?.price?.toString(),
-                            mentorId: fav?.mentorId,
-                          ),
-                          SizedBox(height: 8.h),
-                          _buildInfoRow(
-                            Icons.calendar_month_outlined,
-                            'Deadline: ${fav?.deadLine?.toIso8601String().split('T').first ?? '-'}',
-                            null,
-                          ),
-                          SizedBox(height: 20.h),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                NavigationService.navigateTo(
-                                  Routes.opportunityDetail,
-                                  arguments: {'id': model.favouriteableId},
+                            child: Image(
+                              image: _getImageProvider(
+                                fav?.thumbnail?.toString() ?? '',
+                              ),
+                              height: 180.h,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                  'assets/images/img1.png',
+                                  height: 180.h,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
                                 );
                               },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xff000066),
-                                padding: EdgeInsets.symmetric(vertical: 15.h),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15.r),
-                                ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 15.h,
+                            left: 15.w,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 5.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff00E5FF),
+                                borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: Text(
-                                'Apply Now',
+                                categoryDisplay,
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.sp,
+                                  color: Colors.black,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 15.h,
+                            right: 15.w,
+                            child: GestureDetector(
+                              onTap: () => _toggleFavorite(entry.key),
+                              child: Container(
+                                padding: EdgeInsets.all(8.w),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                  size: 20.sp,
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: EdgeInsets.all(20.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              fav?.title ?? 'No Title',
+                              style: TextStyle(
+                                color: AppColor.textColor,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            Text(
+                              fav?.overview ?? 'No description available',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14.sp,
+                                height: 1.4,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 15.h),
+                            _buildInfoRow(
+                              Icons.person_outline,
+                              'Mentor #${fav?.mentorId ?? '-'}',
+                              fav?.price?.toString(),
+                              mentorId: fav?.mentorId,
+                            ),
+                            SizedBox(height: 8.h),
+                            _buildInfoRow(
+                              Icons.calendar_month_outlined,
+                              'Deadline: ${fav?.deadLine?.toIso8601String().split('T').first ?? '-'}',
+                              null,
+                            ),
+                            SizedBox(height: 20.h),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  NavigationService.navigateTo(
+                                    Routes.paymentScreen,
+                                    arguments: {'id': model.favouriteableId},
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff000066),
+                                  padding: EdgeInsets.symmetric(vertical: 15.h),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Apply Now',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+          SizedBox(height: 70.h),
+        ],
       ),
     );
   }
