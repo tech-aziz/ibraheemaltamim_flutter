@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ibraheemaltamim_flutter/assets_helper/app_colors.dart';
+import 'package:ibraheemaltamim_flutter/features/navbar.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
   const PaymentSuccessScreen({super.key});
@@ -19,8 +20,10 @@ class PaymentSuccessScreen extends StatelessWidget {
                 child: IconButton(
                   icon: Icon(Icons.close, size: 28.sp, color: Colors.black87),
                   onPressed: () {
-                    // Provide a default pop or root navigation depending on the app flow
-                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => const Navbar()),
+                      (route) => false,
+                    );
                   },
                 ),
               ),

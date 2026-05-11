@@ -124,7 +124,6 @@ class _NavbarState extends State<Navbar> {
                                       Text(
                                         _navItems[index]['label']!,
                                         maxLines: 1,
-                                        overflow: TextOverflow.visible,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 14.sp,
