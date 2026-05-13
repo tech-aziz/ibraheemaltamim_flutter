@@ -1,4 +1,4 @@
-package com.syndicate.ibraheemaltamim
+package com.syndicate.ibraheemaltamim_flutter
 
 import io.flutter.embedding.android.FlutterActivity
 
