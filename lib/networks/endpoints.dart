@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names, unnecessary_string_interpolations
 
-const String url = "https://ibraheemaltamim.thesyndicates.team";
+const String url = "https://dashboard.publicationhub.co";
 const String imageUrl = "${url}";
 
 final class NetworkConstants {
@@ -34,7 +34,6 @@ final class Endpoints {
   static String login() => "/api/login";
   // -------------------Login end-------------------
 
-
   // -------------------Logout start-------------------
   static String logout() => "/api/logout";
   // -------------------Logout end-------------------
@@ -43,7 +42,6 @@ final class Endpoints {
   static String forgetPassword() => "/api/forget-password";
   // -------------------Forget Password end-------------------
 
-
   // -------------------Reset Password start-------------------
   static String resetPassword() => "/api/reset-password";
   // -------------------Reset Password end-------------------
@@ -51,11 +49,10 @@ final class Endpoints {
   // -------------------Verify Otp start-------------------
   static String verifyForgetPasswordOtp() => "/api/verify-otp";
   // -------------------Verify Otp end-------------------
-  
+
   // -------------------Update Profile start-------------------
   static String updateProfile() => "/api/update-profile";
   // -------------------Update Profile end-------------------
-  
 
   // -------------------Get Profile start-------------------
   static String getProfile() => "/api/me";
@@ -65,18 +62,17 @@ final class Endpoints {
   static String deleteAccount() => "/api/delete-profile";
   // -------------------Delete Account end-------------------
 
-
   // -------------------Update Password start-------------------
   static String updatePassword() => "/api/update-password";
   // -------------------Update Password end-------------------
-
 
   // -------------------Privacy Policy start-------------------
   static String privacyPolicy() => "/api/dynamic-pages/single/privacy-policy";
   // -------------------Privacy Policy end-------------------
 
   // -------------------Terms And Conditions start-------------------
-  static String termsAndConditions() => "/api/dynamic-pages/single/terms-and-conditions";
+  static String termsAndConditions() =>
+      "/api/dynamic-pages/single/terms-and-conditions";
   // -------------------Terms And Conditions end-------------------
 
   // -------------------Services start-------------------
@@ -88,11 +84,13 @@ final class Endpoints {
   // -------------------Favourites end-------------------
 
   // -------------------Delete Favourites start-------------------
-  static String deleteFavourites(String favouriteId) => "/api/researcher/favourites/$favouriteId";
+  static String deleteFavourites(String favouriteId) =>
+      "/api/researcher/favourites/$favouriteId";
   // -------------------Delete Favourites end-------------------
 
   // -------------------Favourites Details start-------------------
-  static String favouritesDetails(String favouriteId) => "/api/researcher/favourites/$favouriteId";
+  static String favouritesDetails(String favouriteId) =>
+      "/api/researcher/favourites/$favouriteId";
   // -------------------Favourites Details end-------------------
 
   // -------------------Opportunities start-------------------
@@ -103,13 +101,14 @@ final class Endpoints {
   static String addFavourites() => "/api/researcher/favourites";
   // -------------------Add Favourites end-------------------
 
-
   // -------------------Opportunity Details start-------------------
-  static String opportunityDetails(String opportunityId) => "/api/opportunities/$opportunityId";
+  static String opportunityDetails(String opportunityId) =>
+      "/api/opportunities/$opportunityId";
   // -------------------Opportunity Details end-------------------
 
   // ------------------- Mentors details start-------------------
-  static String mentorsDetails(String mentorId) => "/api/opportunities/mentors/$mentorId";
+  static String mentorsDetails(String mentorId) =>
+      "/api/opportunities/mentors/$mentorId";
   // ------------------- Mentors details end-------------------
 
   // ------------------- Filter List start-------------------
@@ -121,13 +120,14 @@ final class Endpoints {
   // ------------------- Notifications List end-------------------
 
   // ------------------- Delete Notifications start-------------------
-  static String deleteNotifications(String notificationId) => "/api/my-notifications-delete/$notificationId";
+  static String deleteNotifications(String notificationId) =>
+      "/api/my-notifications-delete/$notificationId";
   // ------------------- Delete Notifications end-------------------
 
   // ------------------- Mark as Read Notifications start-------------------
-  static String markAsReadNotifications() => "/api/my-notifications/mark-as-read";
+  static String markAsReadNotifications() =>
+      "/api/my-notifications/mark-as-read";
   // ------------------- Mark as Read Notifications end-------------------
-
 
   // ------------------- Delete All Notifications start-------------------
   static String deleteAllNotifications() => "/api/my-notifications-delete-all";
@@ -137,19 +137,17 @@ final class Endpoints {
   static String chatList() => "/api/researcher/chats";
   // ------------------- Chats end-------------------
 
-
   // ------------------- Chats Details start-------------------
-  static String chatListDetails(String chatId) => "/api/researcher/chats/$chatId";
+  static String chatListDetails(String chatId) =>
+      "/api/researcher/chats/$chatId";
   // ------------------- Chats Details end-------------------
 
-
   // ------------------- Chats Message Details start-------------------
-  static String sendMessage(String chatId) => "/api/researcher/chats/$chatId/messages";
+  static String sendMessage(String chatId) =>
+      "/api/researcher/chats/$chatId/messages";
   // ------------------- Chats Message Details end-------------------
 
   // ------------------- WhatsApp Number and Call start-------------------
   static String whatsAppNumberCall() => "/api/system-info";
   // ------------------- WhatsApp Number and Call end-------------------
-
-
 }
