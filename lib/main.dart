@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ibraheemaltamim_flutter/loading.dart';
-import 'package:ibraheemaltamim_flutter/onboarding_screen.dart';
 import 'package:provider/provider.dart';
 import '/helpers/all_routes.dart';
 import 'helpers/di.dart';
