@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/model/privacy_policy_model.dart';
 import 'package:ibraheemaltamim_flutter/networks/dio/dio.dart';

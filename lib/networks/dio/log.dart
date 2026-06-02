@@ -5,7 +5,13 @@ import 'package:flutter/foundation.dart';
 
 import 'package:dio/dio.dart';
 
+import '../../constants/app_constants.dart';
+import '../../helpers/all_routes.dart';
+import '../../helpers/di.dart';
+import '../../helpers/navigation_service.dart';
 import '../exception_handler/data_source.dart';
+import '../stream_cleaner.dart';
+import 'dio.dart';
 
 final class Logger extends Interceptor {
   @override
@@ -42,7 +48,41 @@ final class Logger extends Interceptor {
       log('Error: ${err.error}');
       log('Error Req option: ${err.requestOptions}');
     }
+
+    // Check for unauthenticated error response (token expired or unauthorized)
+    bool isUnauthenticated = false;
+    if (err.response != null) {
+      if (err.response?.statusCode == 401) {
+        isUnauthenticated = true;
+      } else if (err.response?.data != null) {
+        final data = err.response?.data;
+        if (data is Map && data['message'] == 'Unauthenticated.') {
+          isUnauthenticated = true;
+        } else if (data is String && data.contains('Unauthenticated.')) {
+          isUnauthenticated = true;
+        }
+      }
+    }
+
+    if (isUnauthenticated) {
+      _handleSessionExpired();
+    }
+
     ErrorHandler.handle(err).failure;
     return super.onError(err, handler);
   }
+
+  void _handleSessionExpired() async {
+    final token = appData.read(kKeyAccessToken);
+    if (token != null && token.toString().isNotEmpty) {
+      await totalDataClean();
+      appData.remove(kKeyAccessToken);
+      appData.remove(kKeyUserRole);
+      DioSingleton.instance.update('');
+      if (NavigationService.navigatorKey.currentState != null) {
+        NavigationService.navigateToUntilReplacement(Routes.loginScreen);
+      }
+    }
+  }
 }
+

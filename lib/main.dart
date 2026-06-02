@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:ibraheemaltamim_flutter/loading.dart';
+import 'package:ibraheemaltamim_flutter/onboarding_screen.dart';
 import 'package:provider/provider.dart';
 import '/helpers/all_routes.dart';
 import 'helpers/di.dart';
@@ -25,13 +26,13 @@ void main() async {
   DioSingleton.instance.create();
 
   // Set status bar color
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.white, // Change to your desired color
-    statusBarIconBrightness: Brightness.dark, // For white icons
-  ));
-  runApp(
-    const MyApp(),
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.white, // Change to your desired color
+      statusBarIconBrightness: Brightness.dark, // For white icons
+    ),
   );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -56,9 +57,7 @@ class MyApp extends StatelessWidget {
 }
 
 class UtillScreenMobile extends StatelessWidget {
-  const UtillScreenMobile({
-    super.key,
-  });
+  const UtillScreenMobile({super.key});
 
   @override
   Widget build(BuildContext context) {

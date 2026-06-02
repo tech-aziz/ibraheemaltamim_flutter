@@ -287,39 +287,4 @@ class _MentorProfileScreenState extends State<MentorProfileScreen> {
       ),
     );
   }
-
-  Widget _buildSectionTitle(IconData icon, String title) {
-    return Row(
-      children: [
-        Icon(icon, color: const Color(0xff000066), size: 20.sp),
-        SizedBox(width: 10.w),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
-            color: const Color(0xff000066),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTag(String text) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: const Color(0xFFD3EBF7),
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: const Color(0xff000066),
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-    );
-  }
 }

@@ -7,7 +7,6 @@ import 'package:ibraheemaltamim_flutter/features/home/widgets/opportunity_card_w
 import 'package:ibraheemaltamim_flutter/helpers/navigation_service.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_list_model.dart';
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_list/rx.dart';
-import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_list/rx.dart';
 
 class AllOpportunitiesScreen extends StatefulWidget {
   const AllOpportunitiesScreen({super.key});

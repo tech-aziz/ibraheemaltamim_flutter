@@ -9,16 +9,13 @@ import 'package:ibraheemaltamim_flutter/helpers/whatsapp_helper.dart';
 import 'package:ibraheemaltamim_flutter/networks/api_acess.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/opportunity_list_model.dart';
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_opportunity_list/rx.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:ibraheemaltamim_flutter/provider/opportunity_provider.dart';
 import 'package:ibraheemaltamim_flutter/features/home/data/rx_wishlist/rx.dart';
 import 'package:ibraheemaltamim_flutter/features/home/model/wish_list_model.dart';
-import 'package:provider/provider.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/profile_avatar.dart';
 import 'package:ibraheemaltamim_flutter/common_widgets/circular_icon_btn.dart';
-import 'package:ibraheemaltamim_flutter/features/home/widgets/build_waiting_list_card_widget.dart';
 import 'package:ibraheemaltamim_flutter/features/home/widgets/filter_dialog.dart';
 import 'package:ibraheemaltamim_flutter/features/home/widgets/opportunity_card_widget.dart';
+import 'package:ibraheemaltamim_flutter/features/home/widgets/promo_carousel_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -72,6 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              UIHelper.verticalSpace(15.h),
+                              // carosel slider
+                              const PromoCarouselWidget(),
                               UIHelper.verticalSpace(15.h),
                               _buildSearchBar(),
                               SizedBox(height: 20.h),
@@ -139,7 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
