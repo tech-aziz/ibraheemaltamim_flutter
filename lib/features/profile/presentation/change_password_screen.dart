@@ -49,7 +49,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           children: [
             CustomAppbar(
               title: 'Change Password',
-              onTap: () => NavigationService.goBack(),
+              onTap: () => NavigationService.goBack,
             ),
             Expanded(
               child: SingleChildScrollView(

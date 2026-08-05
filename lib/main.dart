@@ -14,6 +14,7 @@ import 'helpers/register_provider.dart';
 import 'networks/dio/dio.dart';
 
 void main() async {
+  
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

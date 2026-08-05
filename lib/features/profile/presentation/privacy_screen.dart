@@ -33,7 +33,7 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
             SizedBox(height: 20.h),
             CustomAppbar(
               title: 'Privacy Policy',
-              onTap: () => NavigationService.goBack(),
+              onTap: () => NavigationService.goBack,
             ),
             Expanded(
               child: StreamBuilder<PrivacyPolicyModel>(
@@ -119,12 +119,8 @@ class _PrivacyScreenState extends State<PrivacyScreen> {
                               color: AppColor.textColor,
                               margin: Margins.only(top: 12, bottom: 4),
                             ),
-                            'p': Style(
-                              margin: Margins.only(bottom: 12),
-                            ),
-                            'li': Style(
-                              margin: Margins.only(bottom: 6),
-                            ),
+                            'p': Style(margin: Margins.only(bottom: 12)),
+                            'li': Style(margin: Margins.only(bottom: 6)),
                             'strong': Style(
                               fontWeight: FontWeight.bold,
                               color: AppColor.textColor,

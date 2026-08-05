@@ -283,7 +283,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                         if (result != null) {
                                           NavigationService.navigateToReplacement(
-                                            Routes.navbar,
+                                            Routes.roleSelectionScreen,
                                           );
                                           ToastUtil.showShortToast(
                                             result.message ??

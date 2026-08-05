@@ -21,6 +21,12 @@ import 'package:ibraheemaltamim_flutter/features/profile/presentation/privacy_sc
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/profile_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/terms_and_condition_screen.dart';
 import 'package:ibraheemaltamim_flutter/features/profile/presentation/change_password_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/auth/login/presentation/role_selection_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/cordinator/presentation/corninator_home_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/cordinator/presentation/all_research_submition_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/cordinator/presentation/view_details_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/cordinator/presentation/chat_screen.dart';
+import 'package:ibraheemaltamim_flutter/features/cordinator/presentation/message_screen.dart';
 
 final class Routes {
   static final Routes _routes = Routes._internal();
@@ -78,6 +84,18 @@ final class Routes {
   static const String changePasswordScreen = '/changePasswordScreen';
   // ---------- Notification Details Screen ----------
   static const String notificationDetailsScreen = '/notificationDetailsScreen';
+  // ---------- Role Selection Screen ----------
+  static const String roleSelectionScreen = '/roleSelectionScreen';
+  // ---------- Coordinator Home Screen ----------
+  static const String coordinatorHomeScreen = '/coordinatorHomeScreen';
+  // ---------- All Research Submission Screen ----------
+  static const String allResearchSubmitionScreen = '/allResearchSubmitionScreen';
+  // ---------- View Details Screen ----------
+  static const String viewDetailsScreen = '/viewDetailsScreen';
+  // ---------- Chat Screen ----------
+  static const String chatScreen = '/chatScreen';
+  // ---------- Message Screen ----------
+  static const String messageScreen = '/messageScreen';
 }
 
 final class RouteGenerator {
@@ -305,6 +323,73 @@ final class RouteGenerator {
             : CupertinoPageRoute(
                 builder: (context) => const ChangePasswordScreen(),
               );
+
+      // ---------- Role Selection Screen ----------
+      case Routes.roleSelectionScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const RoleSelectionScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const RoleSelectionScreen(),
+              );
+
+      // ---------- Coordinator Home Screen ----------
+      case Routes.coordinatorHomeScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const CorninatorHomeScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const CorninatorHomeScreen(),
+              );
+
+      // ---------- All Research Submission Screen ----------
+      case Routes.allResearchSubmitionScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const AllResearchSubmitionScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const AllResearchSubmitionScreen(),
+              );
+
+      // ---------- View Details Screen ----------
+      case Routes.viewDetailsScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const ViewDetailsScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const ViewDetailsScreen(),
+              );
+
+      // ---------- Chat Screen ----------
+      case Routes.chatScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const ChatScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const ChatScreen(),
+              );
+
+      // ---------- Message Screen ----------
+      case Routes.messageScreen:
+        return Platform.isAndroid
+            ? _FadedTransitionRoute(
+                widget: const MessageScreen(),
+                settings: settings,
+              )
+            : CupertinoPageRoute(
+                builder: (context) => const MessageScreen(),
+              );
+
       default:
         return null;
     }

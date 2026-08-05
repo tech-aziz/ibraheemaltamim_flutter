@@ -34,7 +34,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
             SizedBox(height: 20.h),
             CustomAppbar(
               title: 'Terms & Conditions',
-              onTap: () => NavigationService.goBack(),
+              onTap: () => NavigationService.goBack,
             ),
             Expanded(
               child: StreamBuilder<PrivacyPolicyModel>(
@@ -120,12 +120,8 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
                               color: AppColor.textColor,
                               margin: Margins.only(top: 12, bottom: 4),
                             ),
-                            'p': Style(
-                              margin: Margins.only(bottom: 12),
-                            ),
-                            'li': Style(
-                              margin: Margins.only(bottom: 6),
-                            ),
+                            'p': Style(margin: Margins.only(bottom: 12)),
+                            'li': Style(margin: Margins.only(bottom: 6)),
                             'strong': Style(
                               fontWeight: FontWeight.bold,
                               color: AppColor.textColor,
